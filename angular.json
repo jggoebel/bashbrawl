@@ -24,10 +24,7 @@
               "src/config.json",
               "src/custom.css"
             ],
-            "styles": [
-              "node_modules/xterm/css/xterm.css",
-              "src/styles.scss"
-            ],
+            "styles": ["node_modules/xterm/css/xterm.css", "src/styles.scss"],
             "scripts": [
               "node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
               "node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js",
