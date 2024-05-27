@@ -1,1 +1,1 @@
-# BrawlBash Standalone
+# BashBrawl Standalone
