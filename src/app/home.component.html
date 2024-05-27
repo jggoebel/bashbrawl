@@ -38,7 +38,12 @@
           [@terminalAnimation]="terminalState"
           (@terminalAnimation.done)="resize()"
         >
-          <app-bashbrawl-terminal (gameEnded)="resetToDefault()" (gameStarted)="setLargeTerminal()" #terminal> </app-bashbrawl-terminal>
+          <app-bashbrawl-terminal
+            (gameEnded)="resetToDefault()"
+            (gameStarted)="setLargeTerminal()"
+            #terminal
+          >
+          </app-bashbrawl-terminal>
         </div>
       </div>
     </as-split-area>

@@ -1,15 +1,17 @@
 # Adding languages
+
 1. Create a `<lang>.ts` file (for the syntax view one of the other files)
 2. add the file to `language-command.service.ts`
 3. Enjoy the game
 
 # Thanks to [clh-bash](https://github.com/CommandLineHeroes/clh-bash/)
-The maintainers of clr-bash already created
-* bash
-* python
-* html
-* javascript
 
+The maintainers of clr-bash already created
+
+- bash
+- python
+- html
+- javascript
 
 <hr>
 

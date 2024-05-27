@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, concat, of } from 'rxjs';
-import {
-  shareReplay,
-} from 'rxjs/operators';
+import { shareReplay } from 'rxjs/operators';
 import { themes } from '../terminals/terminal-themes/themes';
 import { APIClientFactory } from './api.service';
 
@@ -24,6 +22,6 @@ export class SettingsService {
       terminal_theme: themes[0].id,
       terminal_fontSize: 16,
       divider_position: 40,
-    } as Settings)
+    } as Settings);
   }
 }
