@@ -208,11 +208,8 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
     await this.term.writeln('\nUsage:');
     await this.writeMatrix([
-      ['brawl play', 'Commands from all languages are accepted'],
-      [
-        'brawl play [language]',
-        'Only commands from the selected language are accepted',
-      ],
+      ['brawl play', 'Play with all languages'],
+      ['brawl play [language]', 'Play selected language'],
       ['brawl lang', 'View all available languages'],
       ['brawl top', 'View the leaderboard'],
     ]);
