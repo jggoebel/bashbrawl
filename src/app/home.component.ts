@@ -1,7 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BashbrawlterminalComponent } from './terminals/bashbrawl/bashbrawlterminal.component';
 import { LanguageCommandService } from './terminals/bashbrawl/languages/language-command.service';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-home',
@@ -9,48 +15,51 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   styleUrls: ['home.component.scss'],
   animations: [
     trigger('terminalAnimation', [
-      state('small', style({
-        width: '30vw',
-        minWidth: '500px',
-        height: '30vh'
-       
-      })),
-      state('large', style({
-        width: '50vw',
-        minWidth: '500px',
-        height: '50vh'
-      })),
-      transition('small <=> large', animate('1000ms ease-in-out'))
+      state(
+        'small',
+        style({
+          width: '30vw',
+          minWidth: '500px',
+          height: '30vh',
+        }),
+      ),
+      state(
+        'large',
+        style({
+          width: '50vw',
+          minWidth: '500px',
+          height: '50vh',
+        }),
+      ),
+      transition('small <=> large', animate('1000ms ease-in-out')),
     ]),
     trigger('shrinkAnimation', [
-      state('normal', style({
-        opacity: 1,
-        maxHeight: '35vh'
-      })),
-      state('shrunk', style({
-        opacity: 0,
-        maxHeight: '0vh'
-      })),
-      transition('normal <=> shrunk', animate('1000ms ease-in-out'))
-    ])
-  ]
+      state(
+        'normal',
+        style({
+          opacity: 1,
+          maxHeight: '35vh',
+        }),
+      ),
+      state(
+        'shrunk',
+        style({
+          opacity: 0,
+          maxHeight: '0vh',
+        }),
+      ),
+      transition('normal <=> shrunk', animate('1000ms ease-in-out')),
+    ]),
+  ],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent {
   terminalState = 'small';
   shrinkState = 'normal';
 
-  @ViewChild('terminal', { static: true }) private terms: BashbrawlterminalComponent;
+  @ViewChild('terminal', { static: true })
+  private terms: BashbrawlterminalComponent;
 
-  constructor(private languageCommandService: LanguageCommandService){
-  }
-
-  ngOnInit() {
-    //setTimeout(()=>{this.setLargeTerminal()}, 2500)
-    //setTimeout(()=>{this.resetToDefault()}, 5500)
-  }
-
-  ngOnDestroy() {
-  }
+  constructor(private languageCommandService: LanguageCommandService) {}
 
   public dragEnd() {
     this.resizeTerminals();
@@ -64,28 +73,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.languageCommandService.getLanguageNames();
   }
 
-  setLargeTerminal(){
+  setLargeTerminal() {
     this.shrinkState = 'shrunk';
     this.terminalState = 'large';
-    this.terms.resize()
+    this.terms.resize();
   }
 
-  setSmallTerminal(){
+  setSmallTerminal() {
     this.shrinkState = 'normal';
     this.terminalState = 'small';
   }
 
-  resetToDefault(){
-    if(this.terms){
+  resetToDefault() {
+    if (this.terms) {
       this.terms.clearTerminal();
     }
 
     this.setSmallTerminal();
   }
 
-
-  resize(){
+  resize() {
     this.terms.resize();
   }
-
 }

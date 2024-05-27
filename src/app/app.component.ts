@@ -8,16 +8,14 @@ import { themes } from './terminals/terminal-themes/themes';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   private Config = this.config.getConfig();
-  public title = this.Config.title || "BashBrawl";
+  public title = this.Config.title || 'BashBrawl';
   private logo = this.Config.logo || '/assets/bashbrawl/bashbrawl_text.png';
 
   public themes = themes;
 
-  constructor(
-    private config: AppConfigService,
-  ) {
+  constructor(private config: AppConfigService) {
     this.config.getLogo(this.logo).then((obj: string) => {
       ClarityIcons.addIcons(['logo', obj]);
     });
@@ -27,9 +25,4 @@ export class AppComponent implements OnInit {
       fi.href = this.Config.favicon;
     }
   }
-
-  ngOnInit(): void {
-    
-  }
-
 }

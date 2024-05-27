@@ -21,7 +21,7 @@
                 *ngFor="let lang of getBrawlLanguages(); let i = index"
                 class="brawl-language"
                 >{{ lang | uppercase }}
-                <span *ngIf="i != getBrawlLanguages().length - 1">
+                <span *ngIf="i !== getBrawlLanguages().length - 1">
                   &middot;
                 </span>
               </span>
