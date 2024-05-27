@@ -1,0 +1,46 @@
+<div class="split-container">
+  <as-split
+    unit="percent"
+    direction="vertical"
+    (dragEnd)="dragEnd()"
+    draggable="false"
+    #divider
+    class="hide-split-gutter"
+  >
+    <as-split-area [size]="100" class="split-area-1">
+      <div class="brawl-instructions">
+        <div class="brawl-instructions-guide" style="max-height: 70vh">
+          <img src="/assets/bashbrawl/bashbrowl_text.png" />
+          <div class="brawl-instructions-text" [@shrinkAnimation]="shrinkState">
+            <div class="text centered">
+              Test your command line skills<br />
+              You have 60 seconds to enter commands from
+            </div>
+            <div class="text centered">
+              <span
+                *ngFor="let lang of getBrawlLanguages(); let i = index"
+                class="brawl-language"
+                >{{ lang | uppercase }}
+                <span *ngIf="i != getBrawlLanguages().length - 1">
+                  &middot;
+                </span>
+              </span>
+            </div>
+            <div class="text centered cta">
+              Type <i class="brawl-language brawl-color">brawl play</i> to enter
+              the arena.
+            </div>
+          </div>
+        </div>
+        <div
+          class="terminal"
+          id="terminal"
+          [@terminalAnimation]="terminalState"
+          (@terminalAnimation.done)="resize()"
+        >
+          <app-bashbrawl-terminal (gameEnded)="resetToDefault()" (gameStarted)="setLargeTerminal()" #terminal> </app-bashbrawl-terminal>
+        </div>
+      </div>
+    </as-split-area>
+  </as-split>
+</div>

@@ -1,0 +1,94 @@
+header {
+  // background-image: linear-gradient(45deg,#64c89f,#97a39e)!important;
+  background-color: #000 !important;
+}
+
+.header-nav > .nav-link {
+  &:hover {
+    opacity: 1 !important;
+  }
+
+  &.active {
+    background: rgba(204, 204, 204, 0.25) !important;
+  }
+}
+
+.datagrid-footer {
+  border: 0 !important;
+}
+
+$clr-table-borderwidth: 0;
+$clr-table-bgcolor: #fafafa;
+
+// HobbyFarm Palette
+// #64c89f
+// #9f6aea
+// #70d050
+// #db60c6
+// #b6bc52
+// #8795d8
+// #e65c3c
+// #dd6c89
+// #cd914a
+
+// 70d050
+// e65c3c
+// 3fc5f0
+
+$clr-color-hue: 195;
+$clr-color-action-50: hsl($clr-color-hue, 87%, 88%);
+$clr-color-action-100: hsl($clr-color-hue, 86%, 84%);
+$clr-color-action-200: hsl($clr-color-hue, 86%, 80%);
+$clr-color-action-300: hsl($clr-color-hue, 85%, 76%);
+$clr-color-action-400: hsl($clr-color-hue, 86%, 72%);
+$clr-color-action-500: hsl($clr-color-hue, 86%, 67%);
+$clr-color-action-600: hsl($clr-color-hue, 86%, 64%);
+$clr-color-action-700: hsl($clr-color-hue, 86%, 59%);
+$clr-color-action-800: hsl($clr-color-hue, 67%, 54%);
+$clr-color-action-900: hsl($clr-color-hue, 59%, 47%);
+$clr-color-action-1000: hsl($clr-color-hue, 58%, 42%);
+
+$clr-success-hue: 105;
+$clr-color-success-50: hsl($clr-success-hue, 58%, 87%);
+$clr-color-success-100: hsl($clr-success-hue, 57%, 83%);
+$clr-color-success-200: hsl($clr-success-hue, 58%, 78%);
+$clr-color-success-300: hsl($clr-success-hue, 58%, 74%);
+$clr-color-success-400: hsl($clr-success-hue, 57%, 70%);
+$clr-color-success-500: hsl($clr-success-hue, 57%, 65%);
+$clr-color-success-600: hsl($clr-success-hue, 58%, 61%);
+$clr-color-success-700: hsl($clr-success-hue, 58%, 56%);
+$clr-color-success-800: hsl($clr-success-hue, 46%, 51%);
+$clr-color-success-900: hsl($clr-success-hue, 44%, 45%);
+$clr-color-success-1000: hsl($clr-success-hue, 45%, 40%);
+
+$clr-danger-hue: 11;
+$clr-color-danger-50: hsl($clr-danger-hue, 78%, 87%);
+$clr-color-danger-100: hsl($clr-danger-hue, 77%, 83%);
+$clr-color-danger-200: hsl($clr-danger-hue, 78%, 79%);
+$clr-color-danger-300: hsl($clr-danger-hue, 77%, 74%);
+$clr-color-danger-400: hsl($clr-danger-hue, 78%, 70%);
+$clr-color-danger-500: hsl($clr-danger-hue, 77%, 65%);
+$clr-color-danger-600: hsl($clr-danger-hue, 78%, 61%);
+$clr-color-danger-700: hsl($clr-danger-hue, 77%, 57%);
+$clr-color-danger-800: hsl($clr-danger-hue, 61%, 51%);
+$clr-color-danger-900: hsl($clr-danger-hue, 59%, 45%);
+$clr-color-danger-1000: hsl($clr-danger-hue, 59%, 40%);
+
+$clr-warning-hue: 50;
+$clr-color-warning-50: hsl($clr-warning-hue, 100%, 88%);
+$clr-color-warning-100: hsl($clr-warning-hue, 100%, 84%);
+$clr-color-warning-200: hsl($clr-warning-hue, 100%, 80%);
+$clr-color-warning-300: hsl($clr-warning-hue, 100%, 76%);
+$clr-color-warning-400: hsl($clr-warning-hue, 100%, 72%);
+$clr-color-warning-500: hsl($clr-warning-hue, 100%, 68%);
+$clr-color-warning-600: hsl($clr-warning-hue, 100%, 64%);
+$clr-color-warning-700: hsl($clr-warning-hue, 100%, 60%);
+$clr-color-warning-800: hsl($clr-warning-hue, 79%, 54%);
+$clr-color-warning-900: hsl($clr-warning-hue, 66%, 48%);
+$clr-color-warning-1000: hsl($clr-warning-hue, 67%, 42%);
+
+$clr-global-borderradius: 0rem;
+
+$clr-font: Montserrat, 'Avenir Next', Arial, sans-serif;
+
+$clr-altFont: Barlow, Arial, sans-serif;

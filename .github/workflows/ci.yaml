@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: ['master']
+  pull_request:
+    branches: ['master']
+  workflow_dispatch: {}
+
+concurrency:
+  group: 'ci'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Install Node.js & NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check code style
+        run: npm run prettier:check
+
+      - name: Build Angular app
+        run: npm run build:prod
+
+      - name: Build container image
+        run: docker build -f .github/workflows/Dockerfile-ci -t ${GITHUB_REPOSITORY,,}:${GIT_COMMIT_SHORT_HASH:-dev} .

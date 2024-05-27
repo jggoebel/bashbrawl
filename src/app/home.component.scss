@@ -1,0 +1,94 @@
+#terminal-column {
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.split-container {
+  display: flex;
+  height: 100%;
+}
+
+.hide-split-gutter {
+  ::ng-deep .as-split-gutter {
+    display: none !important;
+  }
+}
+
+.split-area-1 {
+  overflow-y: hidden !important;
+  padding-right: 0.6rem;
+}
+
+.split-area-2 {
+  overflow-y: hidden !important;
+  padding-left: 0.6rem;
+}
+
+.brawl-instructions {
+  background-color: #01162a;
+  color: white;
+  padding: 0px 0px 24px 0;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  font-family: monospace;
+
+  .brawl-instructions-guide {
+    max-height: 50vh;
+    img {
+      margin-top: 5vh;
+      margin-left: auto;
+      margin-right: auto;
+      max-height: 30vh;
+      display: block;
+    }
+
+    .text {
+      width: 100%;
+      padding: 20px;
+      p {
+        color: white;
+      }
+      &.centered {
+        text-align: center;
+      }
+
+      .brawl-color {
+        color: #74e2cd;
+      }
+    }
+
+    .brawl-language {
+      color: #74e2cd;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .cta {
+      font-size: 24px;
+    }
+  }
+
+  .terminal {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top: 5vh;
+  }
+}
+
+.split-container {
+  height: calc(100% + 2.4rem) !important;
+  margin: -1.2rem;
+  background-color: #01162a;
+}
+.split-area-1 {
+  padding-right: 0 !important;
+}
+
+.split-area-2 {
+  padding-left: 0 !important;
+  padding-bottom: 0 !important;
+}
