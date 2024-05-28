@@ -68,7 +68,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   private TERMINAL_WHITESPACE_DELAY = 2;
 
   // Game related
-  private DEFAULT_GAME_TIME = 60; // TODO this is temporary for testing
+  private DEFAULT_GAME_TIME = 60;
   private gameLanguage: string;
   private gameRunning = false;
   private commandsEntered: string[] = [];
@@ -373,13 +373,14 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       'Your highest Streak was ' + this.highestStreak + '.',
     );
 
-    await this.writeDelayed('Enter your name:');
+    await this.writeDelayed('Enter your name:', true);
+    this.terminalSymbol = ' Name: ';
+    this.term.write(` ${this.terminalSymbol} `);
 
     this.commandFn = this.enterNameForLeaderboard;
     this.input_blocked = false;
 
     await this.moveToInputLine();
-    this.terminalSymbol = ' Name: ';
   }
 
   async enterNameForLeaderboard(name: string, args: string) {

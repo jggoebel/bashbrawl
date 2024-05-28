@@ -56,6 +56,7 @@ export class ScoreService {
         const jsonLeaderboard = JSON.stringify(l);
         localStorage.setItem('leaderboard_' + language, jsonLeaderboard);
       });
+      return of(true);
     }
 
     // Set headers for JSON
