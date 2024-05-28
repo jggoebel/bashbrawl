@@ -19,7 +19,6 @@ import {
         'small',
         style({
           width: '30vw',
-          minWidth: '500px',
           height: '30vh',
         }),
       ),
@@ -27,7 +26,6 @@ import {
         'large',
         style({
           width: '50vw',
-          minWidth: '500px',
           height: '50vh',
         }),
       ),

@@ -76,6 +76,7 @@
     margin-right: auto;
     display: block;
     margin-top: 5vh;
+    min-width: 500px;
   }
 }
 
@@ -91,4 +92,15 @@
 .split-area-2 {
   padding-left: 0 !important;
   padding-bottom: 0 !important;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .brawl-instructions {
+    .terminal {
+      max-width: 100% !important;
+      min-width: 100% !important;
+      width: 100% !important;
+    }
+  }
 }
