@@ -374,7 +374,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     );
 
     await this.writeDelayed('Enter your name:', true);
-    this.terminalSymbol = ' Name: ';
+    this.terminalSymbol = 'Name:';
     this.term.write(` ${this.terminalSymbol} `);
 
     this.commandFn = this.enterNameForLeaderboard;
