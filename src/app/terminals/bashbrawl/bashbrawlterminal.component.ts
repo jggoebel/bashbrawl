@@ -941,4 +941,8 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   public clearTerminal() {
     this.term.clear();
   }
+
+  public focusTerminal() {
+    this.term.focus();
+  }
 }

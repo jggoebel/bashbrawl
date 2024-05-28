@@ -95,4 +95,8 @@ export class HomeComponent {
   resize() {
     this.terms.resize();
   }
+
+  focusTerminal() {
+    setTimeout(() => this.terms.focusTerminal(), 0);
+  }
 }

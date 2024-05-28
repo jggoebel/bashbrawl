@@ -41,6 +41,7 @@
           <app-bashbrawl-terminal
             (gameEnded)="resetToDefault()"
             (gameStarted)="setLargeTerminal()"
+            (focusout)="focusTerminal()"
             #terminal
           >
           </app-bashbrawl-terminal>
