@@ -68,7 +68,7 @@ export class ScoreService {
 
   private isLocal() {
     console.log(environment.server);
-    
+
     return (
       !environment.server ||
       environment.server == '' ||
