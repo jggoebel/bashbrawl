@@ -379,8 +379,6 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
     this.commandFn = this.enterNameForLeaderboard;
     this.input_blocked = false;
-
-    await this.moveToInputLine();
   }
 
   async enterNameForLeaderboard(name: string, args: string) {
