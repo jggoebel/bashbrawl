@@ -1,11 +1,15 @@
-.terminal-div {
+.terminal-border {
   height: calc(100% - 25px);
   width: 100%;
   border: 1px solid rgb(224, 224, 224);
   border-top: none;
   border-radius: 0 0 25px 25px;
   z-index: 2;
-  padding-bottom: 25px;
+}
+
+.terminal-div {
+  height: calc(100% - 10px);
+  width: 100%;
 }
 
 .fake-window-header {
@@ -23,7 +27,7 @@
 }
 
 .xterm {
-  height: calc(100%);
+  height: calc(100% - 25px);
 }
 
 .xterm-viewport {
