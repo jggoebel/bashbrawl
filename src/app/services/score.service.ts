@@ -67,12 +67,6 @@ export class ScoreService {
   }
 
   private isLocal() {
-    console.log(environment.server);
-
-    return (
-      !environment.server ||
-      environment.server == '' ||
-      environment.server == 'local'
-    );
+    return !environment.server || !environment.server.startsWith('http');
   }
 }
