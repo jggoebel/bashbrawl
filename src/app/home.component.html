@@ -10,7 +10,7 @@
     <as-split-area [size]="100" class="split-area-1">
       <div class="brawl-instructions">
         <div class="brawl-instructions-guide" style="max-height: 70vh">
-          <img src="/assets/bashbrawl/bashbrowl_text.png" />
+          <img src="/assets/bashbrawl/bashbrawl_text.png" />
           <div class="brawl-instructions-text" [@shrinkAnimation]="shrinkState">
             <div class="text centered">
               Test your command line skills<br />
@@ -26,22 +26,40 @@
                 </span>
               </span>
             </div>
-            <div class="text centered cta">
+            <div
+              class="text centered cta"
+              *ngIf="!badgeScanningMode || scannedCode"
+            >
               Type <i class="brawl-language brawl-color">brawl play</i> to enter
               the arena.
             </div>
+            <div
+              class="text centered cta"
+              *ngIf="badgeScanningMode && !scannedCode"
+            >
+              Scan your <i class="brawl-language brawl-color">BADGE</i> to play.
+            </div>
           </div>
+        </div>
+        <div class="cooldown-timer" *ngIf="cooldown">
+          Please come back in
+          <i class="brawl-language brawl-color">{{
+            getFormattedTimeUntilDate(cooldownTime)
+          }}</i>
+          for another try!
         </div>
         <div
           class="terminal"
           id="terminal"
           [@terminalAnimation]="terminalState"
           (@terminalAnimation.done)="resize()"
+          *ngIf="scannedCode || !badgeScanningMode"
         >
           <app-bashbrawl-terminal
             (gameEnded)="resetToDefault()"
             (gameStarted)="setLargeTerminal()"
             (focusout)="focusTerminal()"
+            [code]="code"
             #terminal
           >
           </app-bashbrawl-terminal>

@@ -7,6 +7,7 @@ import {
   OnInit,
   EventEmitter,
   Output,
+  Input,
 } from '@angular/core';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
@@ -23,6 +24,7 @@ import { firstValueFrom } from 'rxjs';
 export class Score {
   name: string;
   score: number;
+  code: string;
 }
 
 export class Leaderboard {
@@ -40,6 +42,9 @@ const stripAnsi = (str: string) => str.replace(/\x1b\[[0-9;]*m/g, '');
   encapsulation: ViewEncapsulation.None,
 })
 export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
+  @Input()
+  code = '';
+
   @Output()
   gameEnded = new EventEmitter();
 
@@ -135,11 +140,11 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
     this.term.onData((e) => {
       if (e === Keycodes.CTR_C) {
-        this.resetToDefaultShell();
-        this.interrupted = true;
-        if (this.gameRunning) {
-          this.gameEnded.emit();
-        }
+        //this.resetToDefaultShell();
+        //this.interrupted = true;
+        //if (this.gameRunning) {
+        //  this.gameEnded.emit();
+        //}
 
         return;
       }
@@ -400,7 +405,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const score: Score = { name: fullName, score: this.score };
+    const score: Score = { name: fullName, score: this.score, code: this.code };
 
     await firstValueFrom(
       this.scoreService.setScoreForLanguage(this.gameLanguage, score),
@@ -725,6 +730,9 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         break;
       case 'brawl':
         await this.startGame(args);
+        break;
+      case 'exit':
+        this.endGame('', '');
         break;
       default:
         this.term.writeln(`Command not found: ${command}`);

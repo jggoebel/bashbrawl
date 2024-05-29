@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ServerResponse } from '../ServerResponse';
 import { atou } from '../unicode';
-import { environment } from 'src/environments/environment';
 
 type APIClientDefaults = {
   get<T = ServerResponse>(path: string): Observable<T>;
@@ -12,20 +11,15 @@ type APIClientDefaults = {
   delete<T = ServerResponse>(path: string): Observable<T>;
 };
 
-export type GargantuaClient = APIClientDefaults &
+export type ScoreClient = APIClientDefaults &
   Pick<HttpClient, keyof APIClientDefaults>;
 
 @Injectable()
 export class APIClientFactory {
   constructor(private http: HttpClient) {}
 
-  scopedClient(prefix: string): GargantuaClient {
-    const baseUrl = environment.server + prefix;
-    return this.buildPRoxy(baseUrl);
-  }
-
-  scopedShellClient(shellEndpoint: string, prefix: string): GargantuaClient {
-    const baseUrl = shellEndpoint + prefix;
+  scopedClient(endpoint: string, prefix: string): ScoreClient {
+    const baseUrl = endpoint + prefix;
     return this.buildPRoxy(baseUrl);
   }
 

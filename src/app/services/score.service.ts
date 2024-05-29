@@ -5,22 +5,32 @@ import {
 
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
-import { extractResponseContent, APIClientFactory } from './api.service';
+import {
+  extractResponseContent,
+  APIClientFactory,
+  ScoreClient,
+} from './api.service';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
+import { utoa } from '../unicode';
 
 @Injectable()
 export class ScoreService {
-  constructor(private gcf: APIClientFactory) {}
-  private garg = this.gcf.scopedClient('/score');
+  constructor(gcf: APIClientFactory) {
+    this.garg = gcf.scopedClient(this.getServer(), '/score');
+    this.validateHealth();
+  }
+
+  private garg: ScoreClient;
+  private useLocal = true;
 
   public getLeaderboard(language: string) {
     if (!language || language == '') {
       language = 'all';
     }
 
-    if (this.isLocal()) {
+    if (this.useLocal) {
       // Receive from leaderboard local storage
 
       let l = { language: language, scores: [] } as Leaderboard;
@@ -43,7 +53,7 @@ export class ScoreService {
       language = 'all';
     }
 
-    if (this.isLocal()) {
+    if (this.useLocal) {
       // Store in local leaderboard
 
       // Get leaderboard
@@ -67,7 +77,43 @@ export class ScoreService {
     return this.garg.post('/add/' + language, score, { headers });
   }
 
-  private isLocal() {
-    return !environment.server || !environment.server.startsWith('http');
+  public scan(code: string) {
+    if (this.useLocal) {
+      // scanning in local environment does not make any sence.
+      return of(true);
+    }
+
+    code = utoa(code);
+    return this.garg
+      .post('/scan/' + code, false)
+      .pipe(map(extractResponseContent));
+  }
+
+  public validateHealth() {
+    const server = this.getServer();
+    if (!server || !server.startsWith('http')) {
+      this.useLocal = true;
+      return;
+    }
+
+    this.healthz().subscribe({
+      next: () => {
+        this.useLocal = false;
+      },
+      error: () => {
+        this.useLocal = true;
+        console.log(
+          'Server ' + server + ' seems unhealthy, defaulting to local storage',
+        );
+      },
+    });
+  }
+
+  private healthz() {
+    return this.garg.get('/healthz');
+  }
+
+  private getServer() {
+    return localStorage.getItem('score_server') ?? environment.server;
   }
 }

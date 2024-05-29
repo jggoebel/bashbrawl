@@ -68,6 +68,13 @@
 
     .cta {
       font-size: 24px;
+      animation: blinker 2.5s ease-in-out infinite;
+    }
+
+    @keyframes blinker {
+      50% {
+        opacity: 0;
+      }
     }
   }
 
@@ -77,6 +84,10 @@
     display: block;
     margin-top: 5vh;
     min-width: 500px;
+  }
+
+  .cooldown-timer {
+    text-align: center;
   }
 }
 
