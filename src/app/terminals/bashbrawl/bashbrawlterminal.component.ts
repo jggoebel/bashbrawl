@@ -80,7 +80,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   private TERMINAL_WHITESPACE_DELAY = 2;
 
   // Game related
-  private DEFAULT_GAME_TIME = 3;
+  private DEFAULT_GAME_TIME = 60;
   private gameLanguage: string;
   private gameRunning = false;
   private commandsEntered: string[] = [];
@@ -692,12 +692,13 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         await this.displayAvailableLanguages();
         break;
       case 'leaderboard':
-      case 'top':
+      case 'top': {
         const leaderboard = await firstValueFrom(
           this.scoreService.getLeaderboard(params),
         );
         await this.displayLeaderboard(params, leaderboard, {} as Score);
         break;
+      }
       default:
         await this.term.writeln('Invalid Option: ' + input);
         await this.helpGame();
