@@ -67,7 +67,7 @@ export class ScoreService {
       if (jsonLeaderboard && jsonLeaderboard != '') {
         l = JSON.parse(jsonLeaderboard);
       }
-      let localPlacementLeaderboard = this.findLocalScores(l, score);
+      const localPlacementLeaderboard = this.findLocalScores(l, score);
 
       l.scores.push(score);
 
