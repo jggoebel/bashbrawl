@@ -1,5 +1,6 @@
 import {
   Leaderboard,
+  LeaderboardWithLocalPlacement,
   Score,
 } from '../terminals/bashbrawl/bashbrawlterminal.component';
 
@@ -60,13 +61,22 @@ export class ScoreService {
       // add score
       // Store leaderboard
 
-      this.getLeaderboard(language).subscribe((l: Leaderboard) => {
-        l.scores.push(score);
+      let l = { language: language, scores: [] } as Leaderboard;
+      let jsonLeaderboard =
+        localStorage.getItem('leaderboard_' + language) ?? '';
+      if (jsonLeaderboard && jsonLeaderboard != '') {
+        l = JSON.parse(jsonLeaderboard);
+      }
+      let localPlacementLeaderboard = this.findLocalScores(l, score);
 
-        const jsonLeaderboard = JSON.stringify(l);
-        localStorage.setItem('leaderboard_' + language, jsonLeaderboard);
-      });
-      return of(true);
+      l.scores.push(score);
+
+      // TODO calculate local placement
+
+      jsonLeaderboard = JSON.stringify(l);
+      localStorage.setItem('leaderboard_' + language, jsonLeaderboard);
+
+      return of(localPlacementLeaderboard);
     }
 
     // Set headers for JSON
@@ -74,7 +84,9 @@ export class ScoreService {
       'Content-Type': 'application/json',
     });
 
-    return this.garg.post('/add/' + language, score, { headers });
+    return this.garg
+      .post('/add/' + language, score, { headers })
+      .pipe(map(extractResponseContent));
   }
 
   public scan(code: string) {
@@ -115,5 +127,38 @@ export class ScoreService {
 
   private getServer() {
     return localStorage.getItem('score_server') ?? environment.server;
+  }
+
+  private findLocalScores(leaderboard: Leaderboard, newScore: Score) {
+    // Create a deep copy of the scores and add the new score for sorting and placement
+    const scores = [...leaderboard.scores];
+
+    // Sort the scores array by score in descending order
+    scores.sort((a, b) => b.score - a.score);
+
+    // Determine the placement (number of scores greater than the current score)
+    const placement =
+      scores.filter((s) => s.score >= newScore.score).length - 1;
+
+    // Create an array to hold local scores
+    let localScores: Score[] = [];
+
+    // Get two scores above the new score (if available)
+    if (placement >= 10) {
+      localScores = localScores.concat(
+        scores.slice((Math.max(10, placement - 2), placement - 1)),
+      );
+      localScores = localScores.concat(
+        scores.slice(placement + 1, Math.min(scores.length, placement + 1)),
+      );
+    }
+
+    // Return the updated leaderboard object with localScores and placement
+    return {
+      language: leaderboard.language,
+      scores: scores,
+      localscores: localScores,
+      placement: placement,
+    } as LeaderboardWithLocalPlacement;
   }
 }

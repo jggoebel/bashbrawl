@@ -32,6 +32,13 @@ export class Leaderboard {
   scores: Score[];
 }
 
+export class LeaderboardWithLocalPlacement {
+  language: string;
+  scores: Score[];
+  placement: number;
+  localscores: Score[];
+}
+
 // eslint-disable-next-line no-control-regex
 const stripAnsi = (str: string) => str.replace(/\x1b\[[0-9;]*m/g, '');
 
@@ -73,7 +80,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   private TERMINAL_WHITESPACE_DELAY = 2;
 
   // Game related
-  private DEFAULT_GAME_TIME = 60;
+  private DEFAULT_GAME_TIME = 3;
   private gameLanguage: string;
   private gameRunning = false;
   private commandsEntered: string[] = [];
@@ -358,22 +365,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   async saveScore() {
     this.term.write('\r\n');
     await this.writeDelayed('Time is up!');
-
-    this.leaderboard = await firstValueFrom(
-      this.scoreService.getLeaderboard(this.gameLanguage),
-    );
-
     await this.writeDelayed('You scored ' + this.score + '!');
-
-    const placement =
-      this.leaderboard?.scores.filter((s) => s.score > this.score).length ?? 0;
-
-    if (placement < 10 && placement > 0) {
-      await this.writeDelayed(`TOP SCORE!`);
-    } else if (placement == 0) {
-      await this.writeDelayed(`🔥 HIGHSCORE🔥`);
-    }
-
     await this.writeDelayed(
       'Your highest Streak was ' + this.highestStreak + '.',
     );
@@ -407,27 +399,33 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
     const score: Score = { name: fullName, score: this.score, code: this.code };
 
-    await firstValueFrom(
-      this.scoreService.setScoreForLanguage(this.gameLanguage, score),
-    );
+    const leaderboardWithLocalPlacement: LeaderboardWithLocalPlacement =
+      await firstValueFrom(
+        this.scoreService.setScoreForLanguage(this.gameLanguage, score),
+      );
+
+    console.log(leaderboardWithLocalPlacement);
+
+    if (
+      leaderboardWithLocalPlacement.placement < 10 &&
+      leaderboardWithLocalPlacement.placement > 0
+    ) {
+      await this.writeDelayed(`TOP SCORE!`);
+    } else if (leaderboardWithLocalPlacement.placement == 0) {
+      await this.writeDelayed(`🔥 HIGHSCORE🔥`);
+    }
 
     // Add ANSI Escape Codes to format the name for the leaderboard so the current run shows in bold letters
     score.name = '>>\x1b[1;31m ' + score.name + ' \x1b[0m<<'; // \x1b[1;31m makes the text bold (1) and red (31), \x1b[0m clears all effects
-    this.leaderboard.scores.push(score);
-
-    const placement =
-      this.leaderboard.scores.filter((s) => s.score > score.score).length ?? 0;
-
-    const scoreWithPlacement: {
-      name: string;
-      score: number;
-      placement: number;
-    } = { name: score.name, score: score.score, placement: placement };
 
     await this.writeDelayed(`Thank you for playing, ${fullName}!`);
     await this.writeDelayed(`Let's view the Leaderboard.`);
 
-    await this.displayLeaderboard(this.gameLanguage, scoreWithPlacement);
+    await this.displayLeaderboard(
+      this.gameLanguage,
+      leaderboardWithLocalPlacement,
+      score,
+    );
 
     this.terminalSymbol = `Press Enter to continue!`;
 
@@ -442,15 +440,16 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
   async displayLeaderboard(
     language: string,
-    score: { name: string; score: number; placement: number },
+    leaderboardWithLocalPlacement: LeaderboardWithLocalPlacement,
+    score: Score,
   ) {
     if (!language || language == '') {
       language = 'all';
     }
     if (
-      !this.leaderboard ||
-      this.leaderboard.language == '' ||
-      this.leaderboard.scores.length == 0
+      !leaderboardWithLocalPlacement ||
+      leaderboardWithLocalPlacement.language == '' ||
+      leaderboardWithLocalPlacement.scores.length == 0
     ) {
       await this.term.writeln(`No Leaderboard for this language present.`);
       return;
@@ -466,54 +465,63 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       '-------------' + '-'.repeat(langName.length) + '-',
     );
 
-    const topPlayerScores = this.getTopPlayers();
-
-    let scores = [['', 'NAME', 'SCORE']]; // Table heading for scoreboard
-    scores = scores.concat(topPlayerScores);
-
-    if (score && score.placement > 10) {
-      scores.push(['...', '...', '...']);
-      const localScores = this.getPlayersByRange(
-        Math.max(score.placement - 3, 10),
-        5,
-      );
-      scores = scores.concat(localScores);
+    // If we show the leaderboard after a game add the score to the placements leaderboard and sort it so that the score is displayed at the correct position
+    if (score && score.score && score.name != '') {
+      if (leaderboardWithLocalPlacement.placement < 10) {
+        leaderboardWithLocalPlacement.scores.push(score);
+        leaderboardWithLocalPlacement.scores =
+          leaderboardWithLocalPlacement.scores.sort(
+            (a, b) => b.score - a.score,
+          );
+      } else {
+        leaderboardWithLocalPlacement.localscores.push(score);
+        leaderboardWithLocalPlacement.localscores =
+          leaderboardWithLocalPlacement.localscores.sort(
+            (a, b) => b.score - a.score,
+          );
+      }
     }
 
-    const longestScore = topPlayerScores[0][2]?.length ?? 0; // First score entry has the highest score so it is the longest,
+    let scores = [['', 'NAME', 'SCORE']]; // Table heading for scoreboard
+    scores = scores.concat(
+      leaderboardWithLocalPlacement.scores
+        .slice(0, 10)
+        .map((score, index) => [
+          '' + (index + 1) + '.',
+          score.name,
+          score.score.toString(),
+        ]),
+    );
+
+    if (
+      leaderboardWithLocalPlacement &&
+      leaderboardWithLocalPlacement.placement >= 10
+    ) {
+      scores.push(['...', '...', '...']);
+      const scoreIndex = leaderboardWithLocalPlacement.localscores.findIndex(
+        (localScore) =>
+          score.name === localScore.name &&
+          localScore.score === localScore.score,
+      );
+
+      scores = scores.concat(
+        leaderboardWithLocalPlacement.localscores.map((score, index) => [
+          '' +
+            (leaderboardWithLocalPlacement.placement + index - scoreIndex + 1) +
+            '.',
+          score.name,
+          score.score.toString(),
+        ]),
+      );
+    }
+
+    const longestScore = scores[1][2]?.length ?? 0; // First score entry has the highest score so it is the longest,
     scores.forEach((scoreEntry, index) => {
       const pad = Math.max(longestScore - scoreEntry[2].length, 0);
       scores[index][2] = ' '.repeat(pad) + scoreEntry[2];
     });
 
     await this.writeMatrix(scores, false);
-  }
-
-  getPlayersByRange(offset: number = 0, limit = 10): string[][] {
-    // Retrieve the list of players for the specified language
-    const entries = this.leaderboard.scores;
-
-    if (!entries) {
-      return [];
-    }
-
-    // Sort the entries by score in descending order
-    const sortedEntries = entries.sort((a, b) => b.score - a.score);
-
-    // Take the selected players by range
-    const playerRange = sortedEntries.slice(offset, offset + limit);
-
-    // Convert to a two-dimensional array format: [name, score]
-    return playerRange.map((player, index) => [
-      '' + (index + 1 + offset) + '.',
-      player.name,
-      player.score.toString(),
-    ]);
-  }
-
-  getTopPlayers(): string[][] {
-    // Retrieve the list of players for the specified language
-    return this.getPlayersByRange(0, 10);
   }
 
   async displayAvailableLanguages(incluedAll: boolean = true) {
@@ -685,14 +693,10 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         break;
       case 'leaderboard':
       case 'top':
-        this.leaderboard = await firstValueFrom(
+        const leaderboard = await firstValueFrom(
           this.scoreService.getLeaderboard(params),
         );
-        await this.displayLeaderboard(params, {
-          placement: 0,
-          name: '',
-          score: 0,
-        });
+        await this.displayLeaderboard(params, leaderboard, {} as Score);
         break;
       default:
         await this.term.writeln('Invalid Option: ' + input);

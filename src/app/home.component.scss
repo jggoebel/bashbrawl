@@ -26,6 +26,10 @@
   padding-left: 0.6rem;
 }
 
+.brawl-color {
+  color: #74e2cd;
+}
+
 .brawl-instructions {
   background-color: #01162a;
   color: white;
@@ -53,10 +57,6 @@
       }
       &.centered {
         text-align: center;
-      }
-
-      .brawl-color {
-        color: #74e2cd;
       }
     }
 
@@ -88,6 +88,7 @@
 
   .cooldown-timer {
     text-align: center;
+    font-size: 24px;
   }
 }
 

@@ -35,18 +35,18 @@
             </div>
             <div
               class="text centered cta"
-              *ngIf="badgeScanningMode && !scannedCode"
+              *ngIf="badgeScanningMode && !scannedCode && !cooldown"
             >
               Scan your <i class="brawl-language brawl-color">BADGE</i> to play.
             </div>
+            <div class="text centered cooldown-timer" *ngIf="cooldown">
+              Please come back in
+              <i class="brawl-color">{{
+                getFormattedTimeUntilDate(cooldownTime)
+              }}</i>
+              for another try!
+            </div>
           </div>
-        </div>
-        <div class="cooldown-timer" *ngIf="cooldown">
-          Please come back in
-          <i class="brawl-language brawl-color">{{
-            getFormattedTimeUntilDate(cooldownTime)
-          }}</i>
-          for another try!
         </div>
         <div
           class="terminal"

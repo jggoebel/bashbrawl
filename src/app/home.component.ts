@@ -1,10 +1,4 @@
-import {
-  Component,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { BashbrawlterminalComponent } from './terminals/bashbrawl/bashbrawlterminal.component';
 import { LanguageCommandService } from './terminals/bashbrawl/languages/language-command.service';
 import {
@@ -79,7 +73,9 @@ export class HomeComponent implements OnInit {
   public lastScanned: { code: string; times: number };
   badgeScanningMode = false;
   scannedCode = false;
+  scannerTimeoutId: number;
   code = '';
+  scannerCode = '';
   cooldown = false;
   cooldownTime = '';
 
@@ -135,13 +131,18 @@ export class HomeComponent implements OnInit {
     if (this.terms) {
       this.terms.clearTerminal();
     }
-    this.setHiddenTerminal();
+    if (this.badgeScanningMode) {
+      this.setHiddenTerminal();
+    } else {
+      this.setSmallTerminal();
+    }
   }
 
   onScan(code: string) {
+    console.log('Scanned: ' + code);
+    this.code = code;
     this.cooldown = false;
     this.cooldownTime = '';
-    // TODO Verify that no cooldown is active
 
     this.scoreService.scan(code).subscribe({
       next: () => {
@@ -152,7 +153,6 @@ export class HomeComponent implements OnInit {
         this.onCooldown(responseText.cooldown);
       },
     });
-    //OnCooldown(cooldown)
   }
 
   onValidScan(code: string) {
@@ -166,7 +166,7 @@ export class HomeComponent implements OnInit {
     this.cooldownTime = cooldownTimeEnd;
     this.scannedCode = false;
     this.code = '';
-    setTimeout(() => this.resetCooldownTimer(), 3000);
+    setTimeout(() => this.resetCooldownTimer(), 5000);
   }
 
   resetCooldownTimer() {
@@ -186,13 +186,21 @@ export class HomeComponent implements OnInit {
 
   @HostListener('window:keypress', ['$event'])
   protected keyEvent(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.onScan(this.code);
+    window.clearTimeout(this.scannerTimeoutId);
+    if (event.key === 'Enter' && this.scannerCode.length >= 2) {
+      this.onScan(this.scannerCode);
+      this.scannerCode = '';
     } else {
       if (!this.scannedCode) {
-        this.code += event.key;
+        this.scannerCode += event.key;
+        // Reset scannerCode after 20ms to avoid normal keyboard inputs
+        this.scannerTimeoutId = window.setTimeout(() => {
+          this.scannerCode = '';
+        }, 50);
       }
     }
+
+    event.preventDefault();
   }
 
   getFormattedTimeUntilDate(futureDate: string) {
@@ -209,10 +217,9 @@ export class HomeComponent implements OnInit {
     difference %= 60000; // Get the remaining milliseconds after removing minutes
     const seconds = Math.floor(difference / 1000); // Convert remaining milliseconds to seconds
 
-    // Format the minutes and seconds with leading zeros if necessary
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    const formattedSeconds = seconds.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString();
+    const formattedSeconds = seconds.toString();
 
-    return `${formattedMinutes}m:${formattedSeconds}s`;
+    return `${formattedMinutes} minutes and ${formattedSeconds} seconds`;
   }
 }
