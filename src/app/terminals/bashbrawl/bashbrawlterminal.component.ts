@@ -404,8 +404,6 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         this.scoreService.setScoreForLanguage(this.gameLanguage, score),
       );
 
-    console.log(leaderboardWithLocalPlacement);
-
     if (
       leaderboardWithLocalPlacement.placement < 10 &&
       leaderboardWithLocalPlacement.placement > 0
