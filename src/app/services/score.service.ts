@@ -152,7 +152,7 @@ export class ScoreService {
       scores.filter((s) => s.score >= newScore.score).length - 1;
 
     // Create an array to hold local scores
-    let localScores: Score[] = [];
+    const localScores: Score[] = [];
 
     // Get two scores above the new score (if available)
     if (placement >= 10) {
