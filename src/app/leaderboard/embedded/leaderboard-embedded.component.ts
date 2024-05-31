@@ -17,6 +17,9 @@ export class EmbeddedLeaderboardComponent implements AfterViewInit {
   @Input()
   onlyTop = 10;
 
+  @Input()
+  embedded = false;
+
   constructor(private scoreService: ScoreService) {}
 
   ngAfterViewInit(): void {

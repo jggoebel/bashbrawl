@@ -9,8 +9,4 @@ export class Cooldown {
   templateUrl: 'leaderboard.component.html',
   styleUrls: ['leaderboard.component.scss'],
 })
-export class LeaderboardComponent implements AfterViewInit {
-  constructor() {}
-
-  ngAfterViewInit(): void {}
-}
+export class LeaderboardComponent {}
