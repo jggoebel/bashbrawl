@@ -11,9 +11,9 @@
       <ng-container *ngFor="let score of getScores(); let i = index">
         <tr class="entry-row">
           <td *ngIf="i >= 3">{{ i + 1 }}.</td>
-          <td *ngIf="i == 0">🥇</td>
-          <td *ngIf="i == 1">🥈</td>
-          <td *ngIf="i == 2">🥉</td>
+          <td *ngIf="i === 0">🥇</td>
+          <td *ngIf="i === 1">🥈</td>
+          <td *ngIf="i === 2">🥉</td>
           <td>
             <ng-container *ngIf="score.code">
               <a [href]="getUrl(score.code)">{{ score.name }}</a>
