@@ -29,8 +29,12 @@
     text-align: right;
   }
 
-  tr:nth-child(even) {background: #02213d;}
- tr:nth-child(odd) {background: #01162a;}
+  tr:nth-child(even) {
+    background: #02213d;
+  }
+  tr:nth-child(odd) {
+    background: #01162a;
+  }
 
   .entry-row {
     font-size: 24px;
