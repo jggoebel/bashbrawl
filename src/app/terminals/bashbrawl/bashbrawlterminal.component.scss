@@ -18,6 +18,29 @@
   background-color: rgb(224, 224, 224);
   border-bottom: none;
   height: 25px;
+  .bubble {
+    border-radius: 50px;
+    width: 15px;
+    height: 15px;
+    float: left;
+    margin-left: 5px;
+    margin-top: 3px;
+    position: absolute;
+
+    &.red {
+      background-color: rgba(255, 0, 0, 0.5);
+      margin-left: 20px;
+    }
+    &.orange {
+      background-color: rgba(255, 166, 0, 0.5);
+      margin-left: 40px;
+    }
+
+    &.green {
+      background-color: rgba(0, 128, 0, 0.5);
+      margin-left: 60px;
+    }
+  }
   div.title {
     width: 100%;
     color: black;
