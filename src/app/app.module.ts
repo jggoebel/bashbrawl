@@ -7,6 +7,7 @@ import { ClarityModule } from '@clr/angular';
 import { RootComponent } from './root.component';
 import { HomeComponent } from './home.component';
 import { ConfigComponent } from './config/config.component';
+import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 import { BashbrawlterminalComponent } from './terminals/bashbrawl/bashbrawlterminal.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AtobPipe } from './pipes/atob.pipe';
@@ -35,6 +36,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     RootComponent,
     HomeComponent,
     ConfigComponent,
+    LeaderboardComponent,
     BashbrawlterminalComponent,
     AtobPipe,
     UppercasePipe,

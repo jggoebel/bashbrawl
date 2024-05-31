@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { AppComponent } from './app.component';
 import { ConfigComponent } from './config/config.component';
+import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 
 const routes: Routes = [
   {
@@ -10,6 +11,7 @@ const routes: Routes = [
     component: AppComponent,
     children: [
       { path: 'config', component: ConfigComponent },
+      { path: 'leaderboard', component: LeaderboardComponent },
       { path: '', component: HomeComponent },
     ],
   },

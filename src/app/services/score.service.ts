@@ -13,7 +13,7 @@ import {
 } from './api.service';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { utoa } from '../unicode';
 
 @Injectable()
@@ -25,6 +25,8 @@ export class ScoreService {
 
   private garg: ScoreClient;
   private useLocal = true;
+
+  public healthSubject = new BehaviorSubject<boolean>(false);
 
   public getLeaderboard(language: string) {
     if (!language || language == '') {
@@ -40,6 +42,9 @@ export class ScoreService {
       if (jsonLeaderboard && jsonLeaderboard != '') {
         l = JSON.parse(jsonLeaderboard);
       }
+
+      l.scores = l.scores.sort((a, b) => b.score - a.score);
+      l.scores = l.scores.splice(0, 10);
 
       return of(l);
     }
@@ -101,31 +106,36 @@ export class ScoreService {
       .pipe(map(extractResponseContent));
   }
 
-  public validateHealth() {
+  public validateHealth(): Observable<boolean> {
     const server = this.getServer();
     if (!server || !server.startsWith('http')) {
       this.useLocal = true;
-      return;
+      this.healthSubject.next(true);
+      return this.healthSubject.asObservable();
     }
 
     this.healthz().subscribe({
       next: () => {
         this.useLocal = false;
+        this.healthSubject.next(true);
       },
       error: () => {
         this.useLocal = true;
+        this.healthSubject.next(true);
         console.log(
           'Server ' + server + ' seems unhealthy, defaulting to local storage',
         );
       },
     });
+
+    return this.healthSubject.asObservable();
   }
 
   public healthz() {
     return this.garg.get('/healthz');
   }
 
-  private getServer() {
+  public getServer() {
     return localStorage.getItem('score_server') ?? environment.server;
   }
 

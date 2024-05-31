@@ -1,0 +1,45 @@
+.brawl-color {
+  color: #74e2cd;
+}
+
+.leaderboard {
+  height: calc(100% + 2.4rem) !important;
+  margin: -1.2rem;
+  background-color: #01162a;
+  color: white;
+  padding: 0px 0px 24px 0;
+  font-family: monospace;
+  display: flex;
+  flex-flow: column;
+}
+
+.score-container {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+
+  img {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    max-height: 30vh;
+    display: block;
+  }
+
+  .score {
+    text-align: right;
+  }
+
+  tr:nth-child(even) {background: #02213d;}
+ tr:nth-child(odd) {background: #01162a;}
+
+  .entry-row {
+    font-size: 24px;
+    td {
+      padding: 10px;
+      a {
+        color: #74e2cd;
+        font-weight: bold;
+      }
+    }
+  }
+}
