@@ -142,14 +142,12 @@ export class ScoreService {
   private findLocalScores(leaderboard: Leaderboard, newScore: Score) {
     // Create a deep copy of the scores and add the new score for sorting and placement
     const scores = [...leaderboard.scores];
-    scores.push(newScore);
 
     // Sort the scores array by score in descending order
     scores.sort((a, b) => b.score - a.score);
 
     // Determine the placement (number of scores greater than the current score)
-    const placement =
-      scores.filter((s) => s.score >= newScore.score).length - 1;
+    const placement = scores.filter((s) => s.score >= newScore.score).length;
 
     // Create an array to hold local scores
     const localScores: Score[] = [];
@@ -165,7 +163,7 @@ export class ScoreService {
       }
 
       for (
-        let i = placement + 1;
+        let i = placement;
         i < scores.length && localScores.length < 4;
         i++
       ) {
