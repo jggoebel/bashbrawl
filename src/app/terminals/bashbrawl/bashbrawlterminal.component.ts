@@ -80,7 +80,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   private TERMINAL_WHITESPACE_DELAY = 2;
 
   // Game related
-  private DEFAULT_GAME_TIME = 3;
+  private DEFAULT_GAME_TIME = 60;
   private gameLanguage: string;
   private gameRunning = false;
   private commandsEntered: string[] = [];
