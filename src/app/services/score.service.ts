@@ -121,7 +121,7 @@ export class ScoreService {
     });
   }
 
-  private healthz() {
+  public healthz() {
     return this.garg.get('/healthz');
   }
 

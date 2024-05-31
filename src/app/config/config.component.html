@@ -1,0 +1,46 @@
+<div class="config">
+  <form clrForm [formGroup]="settingsForm">
+    <clr-input-container>
+      <label class="clr-col-md-4">Server (or local)</label>
+      <input
+        class="clr-col-md-8"
+        clrInput
+        type="text"
+        name="server"
+        formControlName="server"
+        required
+      />
+      <clr-control-error *clrIfError="'required'"
+        >Server required.</clr-control-error
+      >
+    </clr-input-container>
+    <clr-checkbox-container>
+      <label class="clr-col-md-4">Badge Scanner Enabled</label>
+      <clr-checkbox-wrapper>
+        <input
+          class="clr-col-md-8"
+          type="checkbox"
+          clrCheckbox
+          name="badge_scanner"
+          formControlName="badge_scanner"
+        />
+      </clr-checkbox-wrapper>
+    </clr-checkbox-container>
+  </form>
+  <button type="button" class="btn btn-outline" (click)="storeSettings()">
+    Save
+  </button>
+</div>
+
+<button type="button" class="btn btn-outline" (click)="healthcheck()">
+  Healthcheck
+</button>
+<ng-container *ngIf="healthCheckPerformed">
+  <ng-container *ngIf="healthy"> Healthy! </ng-container>
+  <ng-container *ngIf="!healthy"> Not healthy (or local) </ng-container>
+</ng-container>
+
+<div>
+  Scan any code to view the output:<br />
+  Last Scan: <code>{{ code }}</code>
+</div>

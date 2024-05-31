@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { ClarityModule } from '@clr/angular';
 import { RootComponent } from './root.component';
 import { HomeComponent } from './home.component';
+import { ConfigComponent } from './config/config.component';
 import { BashbrawlterminalComponent } from './terminals/bashbrawl/bashbrawlterminal.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AtobPipe } from './pipes/atob.pipe';
@@ -18,6 +19,7 @@ import { LanguageCommandService } from './terminals/bashbrawl/languages/language
 import { ScoreService } from './services/score.service';
 import '@cds/core/icon/register.js';
 import { ClarityIcons, terminalIcon } from '@cds/core/icon';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 ClarityIcons.addIcons(terminalIcon);
 
@@ -32,6 +34,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     AppComponent,
     RootComponent,
     HomeComponent,
+    ConfigComponent,
     BashbrawlterminalComponent,
     AtobPipe,
     UppercasePipe,
@@ -43,6 +46,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     HttpClientModule,
     AngularSplitModule,
     BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     AppComponent,
