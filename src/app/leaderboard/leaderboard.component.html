@@ -1,32 +1,6 @@
 <div class="leaderboard">
   <div class="score-container">
-    <img src="/assets/bashbrawl/bashbrawl_text.png" />
-    <table>
-      <tr>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Score</th>
-      </tr>
-
-      <ng-container *ngFor="let score of getScores(); let i = index">
-        <tr class="entry-row">
-          <td *ngIf="i >= 3">{{ i + 1 }}.</td>
-          <td *ngIf="i === 0">🥇</td>
-          <td *ngIf="i === 1">🥈</td>
-          <td *ngIf="i === 2">🥉</td>
-          <td>
-            <ng-container *ngIf="score.code">
-              <a [href]="getUrl(score.code)">{{ score.name }}</a>
-            </ng-container>
-            <ng-container *ngIf="!score.code">
-              {{ score.name }}
-            </ng-container>
-          </td>
-          <td class="score">
-            {{ score.score }}
-          </td>
-        </tr>
-      </ng-container>
-    </table>
+    <img src="/assets/bashbrawl/bashbrawl_text.png"  />
+    <app-leaderboard-embdedded/>
   </div>
 </div>

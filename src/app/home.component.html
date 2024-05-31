@@ -46,6 +46,14 @@
               }}</i>
               for another try!
             </div>
+            <div
+              class="centered leaderboard"
+              *ngIf="badgeScanningMode && !scannedCode"
+            >
+              <app-leaderboard-embdedded
+                [onlyTop]="5"
+              ></app-leaderboard-embdedded>
+            </div>
           </div>
         </div>
         <div
