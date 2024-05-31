@@ -1,8 +1,6 @@
 import { Component, HostListener } from '@angular/core';
-import { LanguageCommandService } from '../terminals/bashbrawl/languages/language-command.service';
 import { ScoreService } from '../services/score.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { local } from 'd3';
 
 export class Cooldown {
   cooldown: string;
@@ -37,10 +35,7 @@ export class ConfigComponent {
     },
   );
 
-  constructor(
-    private languageCommandService: LanguageCommandService,
-    private scoreService: ScoreService,
-  ) {
+  constructor(private scoreService: ScoreService) {
     this.badgeScanningMode = localStorage.getItem('badge_scanner')
       ? true
       : false;
@@ -74,9 +69,10 @@ export class ConfigComponent {
   }
 
   storeSettings() {
-    let server = this.settingsForm.controls['server'].value;
+    const server = this.settingsForm.controls['server'].value;
     localStorage.setItem('score_server', server);
-    let badge_scanning_mode = this.settingsForm.controls['badge_scanner'].value;
+    const badge_scanning_mode =
+      this.settingsForm.controls['badge_scanner'].value;
     if (badge_scanning_mode == true) {
       localStorage.setItem('badge_scanner', 'true');
     } else {
