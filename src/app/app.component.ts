@@ -35,5 +35,10 @@ export class AppComponent {
     if (environment.privacypolicy && environment.privacypolicy != '') {
       this.privacyPolicy = environment.privacypolicy;
     }
+
+    if (localStorage.getItem('score_server') != '') {
+      this.imprint = '';
+      this.privacyPolicy = '';
+    }
   }
 }
