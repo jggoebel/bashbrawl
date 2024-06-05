@@ -5,3 +5,10 @@
     </div>
   </div>
 </div>
+
+<div class="imprint" *ngIf="imprint">
+  <a [href]="imprint">Impressum</a>
+</div>
+<div class="privacy" *ngIf="privacyPolicy">
+  <a [href]="privacyPolicy">Privacy Policy</a>
+</div>

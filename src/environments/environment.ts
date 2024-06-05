@@ -4,6 +4,8 @@
 export const environment = {
   production: false,
   server: 'http://localhost:16210',
+  imprint: '',
+  privacypolicy: '',
 };
 /*
  * For easier debugging in development mode, you can import the following file
