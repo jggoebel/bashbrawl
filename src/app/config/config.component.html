@@ -26,6 +26,18 @@
         />
       </clr-checkbox-wrapper>
     </clr-checkbox-container>
+    <clr-checkbox-container>
+      <label class="clr-col-md-4">Disable Imprint</label>
+      <clr-checkbox-wrapper>
+        <input
+          class="clr-col-md-8"
+          type="checkbox"
+          clrCheckbox
+          name="disable_imprint"
+          formControlName="disable_imprint"
+        />
+      </clr-checkbox-wrapper>
+    </clr-checkbox-container>
   </form>
   <button type="button" class="btn btn-outline" (click)="storeSettings()">
     Save

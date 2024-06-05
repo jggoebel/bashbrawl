@@ -13,6 +13,7 @@ export class Cooldown {
 })
 export class ConfigComponent {
   badgeScanningMode: boolean;
+  disableImprint: boolean;
   scannerTest: boolean;
   scannedCode = false;
   scannerTimeoutId: number;
@@ -28,6 +29,9 @@ export class ConfigComponent {
       badge_scanner: new FormControl<string | null>(null, [
         Validators.required,
       ]),
+      disable_imprint: new FormControl<string | null>(null, [
+        Validators.required,
+      ]),
     },
     {
       validators: ({ value: { new_password1: pw1, new_password1: pw2 } }) =>
@@ -40,9 +44,14 @@ export class ConfigComponent {
       ? true
       : false;
 
+    this.disableImprint = localStorage.getItem('disable_imprint')
+      ? true
+      : false;
+
     this.settingsForm.setValue({
       server: localStorage.getItem('score_server'),
       badge_scanner: this.badgeScanningMode,
+      disable_imprint: this.disableImprint,
     });
 
     // in normal mode display the
@@ -73,10 +82,16 @@ export class ConfigComponent {
     localStorage.setItem('score_server', server);
     const badge_scanning_mode =
       this.settingsForm.controls['badge_scanner'].value;
+    const disableImprint = this.settingsForm.controls['disable_imprint'].value;
     if (badge_scanning_mode == true) {
       localStorage.setItem('badge_scanner', 'true');
     } else {
       localStorage.removeItem('badge_scanner');
+    }
+    if (disableImprint == true) {
+      localStorage.setItem('disable_imprint', 'true');
+    } else {
+      localStorage.removeItem('disable_imprint');
     }
     window.location.reload();
   }
