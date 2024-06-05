@@ -36,7 +36,10 @@ export class AppComponent {
       this.privacyPolicy = environment.privacypolicy;
     }
 
-    if (localStorage.getItem('disable_imprint') != '') {
+    if (
+      localStorage.getItem('disable_imprint') &&
+      localStorage.getItem('disable_imprint') != ''
+    ) {
       this.imprint = '';
       this.privacyPolicy = '';
     }
