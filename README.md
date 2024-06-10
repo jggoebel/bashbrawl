@@ -2,7 +2,7 @@
 
 ![Baschbrawl Screen](./src/assets/bashbrawl/bashbrawl_screen.PNG)
 
-Test it on [brawlbash.com](https://brawlbash.com)
+Test it on [bashbrawl.com](https://bashbrawl.com)
 
 ## Options:
 
