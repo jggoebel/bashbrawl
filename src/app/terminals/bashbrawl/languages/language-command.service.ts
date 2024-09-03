@@ -6,6 +6,7 @@ import { bashConfig } from './bash';
 import { pythonConfig } from './python';
 import { LanguageConfig } from './language-config.interface';
 import { javascriptConfig } from './javascript';
+import { phpConfig } from './php';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,7 @@ export class LanguageCommandService {
     bash: bashConfig,
     python: pythonConfig,
     javascript: javascriptConfig,
+    php: phpConfig,
     // other languages can be added here
   };
 
