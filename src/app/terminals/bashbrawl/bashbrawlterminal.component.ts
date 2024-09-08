@@ -268,6 +268,14 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   }
 
   async beginGame() {
+    // prevent multiple games running
+    if (this.gameRunning) {
+      return;
+    }
+
+    // set game running flag
+    this.gameRunning = true;
+
     // set language array here;
     this.score = 0;
     this.streak = 0;
@@ -297,7 +305,6 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.gameRunning = true;
     this.commandFn = this.gameCommand;
     this.input_blocked = false;
 
