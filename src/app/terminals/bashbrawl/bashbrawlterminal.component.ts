@@ -214,11 +214,11 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   }
 
   async helpGame() {
-    await this.term.writeln(
+    this.term.writeln(
       'Start the game with one of the following option modes:',
     );
 
-    await this.term.writeln('\nUsage:');
+    this.term.writeln('\nUsage:');
     await this.writeMatrix([
       ['brawl play', 'Play with all languages'],
       ['brawl play [language]', 'Play selected language'],
@@ -456,17 +456,17 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       leaderboardWithLocalPlacement.language == '' ||
       leaderboardWithLocalPlacement.scores.length == 0
     ) {
-      await this.term.writeln(`No Leaderboard for this language present.`);
+      this.term.writeln(`No Leaderboard for this language present.`);
       return;
     }
 
     const langName = this.languageCommandService.getLanguageNameById(language);
 
-    await this.term.writeln(
+    this.term.writeln(
       '-------------' + '-'.repeat(langName.length) + '-',
     );
-    await this.term.writeln('LEADERBOARD (' + langName + ')');
-    await this.term.writeln(
+    this.term.writeln('LEADERBOARD (' + langName + ')');
+    this.term.writeln(
       '-------------' + '-'.repeat(langName.length) + '-',
     );
 
@@ -705,7 +705,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         break;
       }
       default:
-        await this.term.writeln('Invalid Option: ' + input);
+        this.term.writeln('Invalid Option: ' + input);
         await this.helpGame();
     }
   }
@@ -720,7 +720,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     } else if (language == '') {
       await this.confirmBeginGame('all');
     } else {
-      await this.term.writeln('Invalid language. Available languages are: ');
+      this.term.writeln('Invalid language. Available languages are: ');
       await this.displayAvailableLanguages();
     }
   }
@@ -756,7 +756,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.input_blocked = true;
     this.interrupted = false;
 
-    await this.commandFn(command, params);
+    this.commandFn(command, params);
 
     this.term.write(` ${this.terminalSymbol} `);
     this.interrupted = false;
