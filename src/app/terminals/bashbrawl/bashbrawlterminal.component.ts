@@ -214,9 +214,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   }
 
   async helpGame() {
-    this.term.writeln(
-      'Start the game with one of the following option modes:',
-    );
+    this.term.writeln('Start the game with one of the following option modes:');
 
     this.term.writeln('\nUsage:');
     await this.writeMatrix([
@@ -462,13 +460,9 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
     const langName = this.languageCommandService.getLanguageNameById(language);
 
-    this.term.writeln(
-      '-------------' + '-'.repeat(langName.length) + '-',
-    );
+    this.term.writeln('-------------' + '-'.repeat(langName.length) + '-');
     this.term.writeln('LEADERBOARD (' + langName + ')');
-    this.term.writeln(
-      '-------------' + '-'.repeat(langName.length) + '-',
-    );
+    this.term.writeln('-------------' + '-'.repeat(langName.length) + '-');
 
     // If we show the leaderboard after a game add the score to the placements leaderboard and sort it so that the score is displayed at the correct position
     if (score && score.score && score.name != '') {
