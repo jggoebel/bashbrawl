@@ -590,7 +590,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       if (score.fire > 0) {
         outputString += ' 🔥x' + score.fire;
       }
-    } else if (this.commandsEntered.includes(r.cmd)) {
+    } else if (r.found && this.commandsEntered.includes(r.cmd)) {
       this.commandsEnteredAtTimepoint = []; // Reset so the streak gets lost
       this.streak = 0;
       outputString = ' ✘ ' + cmd + '  | Duplicate to "' + r.cmd + '"';
