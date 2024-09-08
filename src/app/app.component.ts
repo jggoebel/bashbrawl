@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import '@cds/core/icon/register.js';
 import { ClarityIcons } from '@cds/core/icon';
 import { AppConfigService } from './app-config.service';

@@ -228,7 +228,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   }
   async startGame(option: string) {
     if (option && option != '') {
-      await this.selectGameOption(option, '');
+      await this.selectGameOption(option);
       return;
     } else {
       await this.helpGame();
@@ -430,7 +430,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.commandFn = this.endGame;
   }
 
-  async endGame(command: string, params: string) {
+  async endGame() {
     this.input_blocked = true;
     this.resetToDefaultShell();
     this.gameEnded.emit();
@@ -538,7 +538,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     //await this.writeMatrix(this.convertToMatrix(newLang, 4), false);
   }
 
-  async gameCommand(cmd: string, args: string) {
+  async gameCommand(cmd: string) {
     const r = this.languageCommandService.find(cmd, this.gameLanguage);
 
     let score: {
@@ -673,7 +673,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.term.write('\x1b[2K'); // Clear the line again to ensure it's clean for new input
   }
 
-  async selectGameOption(input: string, _args: string) {
+  async selectGameOption(input: string) {
     const args = input.split(' ');
     const command = args[0];
     const params = args.slice(1).join(' ');
@@ -683,7 +683,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         await this.helpGame();
         break;
       case 'play':
-        await this.selectLanguage(params, '');
+        await this.selectLanguage(params);
         break;
       case 'lang':
       case 'languages':
@@ -703,7 +703,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async selectLanguage(language: string, args: string) {
+  async selectLanguage(language: string) {
     let languages = this.languageCommandService.getLanguageKeys();
     languages = languages.map((el) => {
       return el.toLowerCase();
@@ -735,7 +735,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         await this.startGame(args);
         break;
       case 'exit':
-        this.endGame('', '');
+        this.endGame();
         break;
       default:
         this.term.writeln(`Command not found: ${command}`);
@@ -776,8 +776,8 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.commandFn = this.menuCommandsFn;
   }
 
-  async noop(command: string, args: string) {
-    // none
+  async noop() {
+    return;
   }
 
   async writeMatrix(text: string[][], writeDelayed: boolean = false) {
