@@ -5,7 +5,7 @@ import { themes } from '../terminals/terminal-themes/themes';
 import { APIClientFactory } from './api.service';
 
 export interface Settings {
-  terminal_theme: typeof themes[number]['id'];
+  terminal_theme: (typeof themes)[number]['id'];
   terminal_fontSize: number;
   divider_position: number;
 }

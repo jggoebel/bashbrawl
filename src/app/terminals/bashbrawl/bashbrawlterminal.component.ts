@@ -214,11 +214,9 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   }
 
   async helpGame() {
-    await this.term.writeln(
-      'Start the game with one of the following option modes:',
-    );
+    this.term.writeln('Start the game with one of the following option modes:');
 
-    await this.term.writeln('\nUsage:');
+    this.term.writeln('\nUsage:');
     await this.writeMatrix([
       ['brawl play', 'Play with all languages'],
       ['brawl play [language]', 'Play selected language'],
@@ -228,7 +226,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   }
   async startGame(option: string) {
     if (option && option != '') {
-      await this.selectGameOption(option, '');
+      await this.selectGameOption(option);
       return;
     } else {
       await this.helpGame();
@@ -437,7 +435,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.commandFn = this.endGame;
   }
 
-  async endGame(command: string, params: string) {
+  async endGame() {
     this.input_blocked = true;
     this.resetToDefaultShell();
     this.gameEnded.emit();
@@ -456,19 +454,15 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       leaderboardWithLocalPlacement.language == '' ||
       leaderboardWithLocalPlacement.scores.length == 0
     ) {
-      await this.term.writeln(`No Leaderboard for this language present.`);
+      this.term.writeln(`No Leaderboard for this language present.`);
       return;
     }
 
     const langName = this.languageCommandService.getLanguageNameById(language);
 
-    await this.term.writeln(
-      '-------------' + '-'.repeat(langName.length) + '-',
-    );
-    await this.term.writeln('LEADERBOARD (' + langName + ')');
-    await this.term.writeln(
-      '-------------' + '-'.repeat(langName.length) + '-',
-    );
+    this.term.writeln('-------------' + '-'.repeat(langName.length) + '-');
+    this.term.writeln('LEADERBOARD (' + langName + ')');
+    this.term.writeln('-------------' + '-'.repeat(langName.length) + '-');
 
     // If we show the leaderboard after a game add the score to the placements leaderboard and sort it so that the score is displayed at the correct position
     if (score && score.score && score.name != '') {
@@ -545,7 +539,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     //await this.writeMatrix(this.convertToMatrix(newLang, 4), false);
   }
 
-  async gameCommand(cmd: string, args: string) {
+  async gameCommand(cmd: string) {
     const r = this.languageCommandService.find(cmd, this.gameLanguage);
 
     let score: {
@@ -590,7 +584,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       if (score.fire > 0) {
         outputString += ' 🔥x' + score.fire;
       }
-    } else if (this.commandsEntered.includes(r.cmd)) {
+    } else if (r.found && this.commandsEntered.includes(r.cmd)) {
       this.commandsEnteredAtTimepoint = []; // Reset so the streak gets lost
       this.streak = 0;
       outputString = ' ✘ ' + cmd + '  | Duplicate to "' + r.cmd + '"';
@@ -680,7 +674,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.term.write('\x1b[2K'); // Clear the line again to ensure it's clean for new input
   }
 
-  async selectGameOption(input: string, _args: string) {
+  async selectGameOption(input: string) {
     const args = input.split(' ');
     const command = args[0];
     const params = args.slice(1).join(' ');
@@ -690,7 +684,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         await this.helpGame();
         break;
       case 'play':
-        await this.selectLanguage(params, '');
+        await this.selectLanguage(params);
         break;
       case 'lang':
       case 'languages':
@@ -705,12 +699,12 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         break;
       }
       default:
-        await this.term.writeln('Invalid Option: ' + input);
+        this.term.writeln('Invalid Option: ' + input);
         await this.helpGame();
     }
   }
 
-  async selectLanguage(language: string, args: string) {
+  async selectLanguage(language: string) {
     let languages = this.languageCommandService.getLanguageKeys();
     languages = languages.map((el) => {
       return el.toLowerCase();
@@ -720,7 +714,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     } else if (language == '') {
       await this.confirmBeginGame('all');
     } else {
-      await this.term.writeln('Invalid language. Available languages are: ');
+      this.term.writeln('Invalid language. Available languages are: ');
       await this.displayAvailableLanguages();
     }
   }
@@ -742,7 +736,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         await this.startGame(args);
         break;
       case 'exit':
-        this.endGame('', '');
+        this.endGame();
         break;
       default:
         this.term.writeln(`Command not found: ${command}`);
@@ -756,7 +750,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.input_blocked = true;
     this.interrupted = false;
 
-    await this.commandFn(command, params);
+    this.commandFn(command, params);
 
     this.term.write(` ${this.terminalSymbol} `);
     this.interrupted = false;
@@ -783,8 +777,8 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.commandFn = this.menuCommandsFn;
   }
 
-  async noop(command: string, args: string) {
-    // none
+  async noop() {
+    return;
   }
 
   async writeMatrix(text: string[][], writeDelayed: boolean = false) {
