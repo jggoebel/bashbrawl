@@ -1,0 +1,11 @@
+# Should only be used with GitHub Actions CI pipeline
+# For local, refer to Dockerfile at root of project
+
+FROM nginx:stable-alpine
+
+COPY dist/* /usr/share/nginx/html
+
+# copy staged files
+COPY .docker/stage-release/ /
+
+ENTRYPOINT ["entrypoint.sh"]
