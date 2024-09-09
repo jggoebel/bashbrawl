@@ -557,6 +557,15 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     let outputString;
 
     const timePassed = this.DEFAULT_GAME_TIME - this.gameTime;
+    const totalRows = this.term.rows; // Total number of rows in the terminal
+    const commandsAreaEnd = totalRows - 2; // The last line before the fixed input line
+
+    if (!cmd) {
+      await this.writeScore();
+      this.term.write(`\x1b[${totalRows - 1};1H\x1b[2K`); // Optionally clear the input line
+      await this.moveToInputLine();
+      return;
+    }
 
     if (r.found && !this.commandsEntered.includes(r.cmd)) {
       this.commandsEntered.push(r.cmd);
@@ -592,9 +601,6 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       this.streak = 0;
       outputString = ' ✘ ' + cmd;
     }
-
-    const totalRows = this.term.rows; // Total number of rows in the terminal
-    const commandsAreaEnd = totalRows - 2; // The last line before the fixed input line
 
     // Write new command in the line just above the fixed input area
     this.term.write(`\x1b[${commandsAreaEnd};1H`); // Moves cursor and clears the line
