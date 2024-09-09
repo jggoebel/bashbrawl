@@ -12,7 +12,7 @@ RUN npm run build:prod
 ###### release image #####
 FROM nginx:stable-alpine
 
-COPY --from=sdk /app/dist/* /usr/share/nginx/html
+COPY --from=sdk /app/dist/@jggoebel/bashbrawl/* /usr/share/nginx/html/
 
 # copy staged files
 COPY .docker/stage-release/ /
