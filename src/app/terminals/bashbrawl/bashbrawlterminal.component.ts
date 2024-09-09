@@ -65,7 +65,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   public mutationObserver: MutationObserver;
 
   private command = '';
-  private commandFn: (command: string, params: string) => void =
+  private commandFn: (command: string, params: string) => Promise<void> =
     this.menuCommandsFn;
   private inputFn: (command: string) => void = this.handleCommandWithNewline;
   private cursorPosition = 0;
@@ -262,7 +262,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
   async confirmBeginGameFn() {
     this.input_blocked = true;
-    this.beginGame();
+    await this.beginGame();
   }
 
   async beginGame() {
@@ -377,7 +377,6 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
     await this.writeDelayed('Enter your name:', true);
     this.terminalSymbol = 'Name:';
-    this.term.write(` ${this.terminalSymbol} `);
 
     this.commandFn = this.enterNameForLeaderboard;
     this.input_blocked = false;
@@ -750,7 +749,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.input_blocked = true;
     this.interrupted = false;
 
-    this.commandFn(command, params);
+    await this.commandFn(command, params);
 
     this.term.write(` ${this.terminalSymbol} `);
     this.interrupted = false;
