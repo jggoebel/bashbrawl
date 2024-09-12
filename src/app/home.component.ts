@@ -129,6 +129,7 @@ export class HomeComponent implements OnInit {
     this.scannedCode = false;
 
     if (this.terms) {
+      this.terms.resetToDefaultShell();
       this.terms.clearTerminal();
     }
     if (this.badgeScanningMode) {

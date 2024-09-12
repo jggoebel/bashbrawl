@@ -80,7 +80,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   private TERMINAL_WHITESPACE_DELAY = 2;
 
   // Game related
-  private DEFAULT_GAME_TIME = 60;
+  private DEFAULT_GAME_TIME = 5;
   private gameLanguage: string;
   private gameRunning = false;
   private commandsEntered: string[] = [];
@@ -89,7 +89,8 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   private highestStreak = 0;
   private gameTime = 0;
   private score = 0;
-
+  private autoEndSubscription: number;
+  private autoEndSeconds = 20;
   // Leaderboards maps a list of score entries to the language they competed in.
   private leaderboard: Leaderboard;
 
@@ -431,10 +432,15 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
     this.terminalSymbol = `Press Enter to continue!`;
 
+    this.autoEndSubscription = window.setTimeout(() => {
+      this.endGame();
+    }, this.autoEndSeconds * 1000);
+
     this.commandFn = this.endGame;
   }
 
   async endGame() {
+    window.clearTimeout(this.autoEndSubscription);
     this.input_blocked = true;
     this.resetToDefaultShell();
     this.gameEnded.emit();
