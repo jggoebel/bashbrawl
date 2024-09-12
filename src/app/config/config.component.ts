@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { ScoreService } from '../services/score.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { LanguageCommandService } from '../terminals/bashbrawl/languages/language-command.service';
 
 export class Cooldown {
   cooldown: string;
@@ -23,6 +24,8 @@ export class ConfigComponent {
   healthy = false;
   healthCheckPerformed = false;
 
+  public languagesForm: FormGroup = new FormGroup({});
+
   public settingsForm: FormGroup = new FormGroup(
     {
       server: new FormControl<string | null>(null, [Validators.required]),
@@ -39,7 +42,10 @@ export class ConfigComponent {
     },
   );
 
-  constructor(private scoreService: ScoreService) {
+  constructor(
+    private scoreService: ScoreService,
+    public languageCommandService: LanguageCommandService,
+  ) {
     this.badgeScanningMode = localStorage.getItem('badge_scanner')
       ? true
       : false;
@@ -52,6 +58,15 @@ export class ConfigComponent {
       server: localStorage.getItem('score_server'),
       badge_scanner: this.badgeScanningMode,
       disable_imprint: this.disableImprint,
+    });
+
+    this.languageCommandService.getAllLanguageKeys().forEach((lang) => {
+      let enabled = true;
+      const configEnabled = localStorage.getItem('enabled_' + lang);
+      if (configEnabled && configEnabled == 'false') {
+        enabled = false;
+      }
+      this.languagesForm.addControl(lang, new FormControl(enabled));
     });
 
     // in normal mode display the
@@ -93,6 +108,11 @@ export class ConfigComponent {
     } else {
       localStorage.removeItem('disable_imprint');
     }
+
+    this.languageCommandService.getAllLanguageKeys().forEach((lang) => {
+      localStorage.setItem('enabled_' + lang, this.languagesForm.value[lang]);
+    });
+
     window.location.reload();
   }
 

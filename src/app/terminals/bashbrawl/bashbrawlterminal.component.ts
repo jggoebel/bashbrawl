@@ -524,7 +524,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
   async displayAvailableLanguages(incluedAll: boolean = true) {
     let languages = this.languageCommandService
-      .getLanguageKeys()
+      .getEnabledLanguageKeys()
       .sort((a, b) => {
         return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
       });
@@ -710,7 +710,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   }
 
   async selectLanguage(language: string) {
-    let languages = this.languageCommandService.getLanguageKeys();
+    let languages = this.languageCommandService.getEnabledLanguageKeys();
     languages = languages.map((el) => {
       return el.toLowerCase();
     });

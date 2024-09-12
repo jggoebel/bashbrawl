@@ -45,7 +45,7 @@ export class LanguageCommandService {
       });
     } else {
       // Loop through each language's command list
-      for (const lang in this.commands) {
+      for (const lang of this.getEnabledLanguageKeys()) {
         // Iterate over each command or command array in the command list
         this.getLanguageById(lang).cmds.forEach((command) => {
           // If command is an array, check if the trimmed command matches any command in the array
@@ -63,23 +63,44 @@ export class LanguageCommandService {
 
   getLanguageNames(): string[] {
     const languages: string[] = [];
-    Object.values(this.commands).forEach((element) => {
-      languages.push(element.name);
+    this.getEnabledLanguageKeys().forEach((element) => {
+      languages.push(this.getLanguageNameById(element));
     });
     return languages;
   }
 
-  getLanguageKeys() {
+  getAllLanguageKeys(): string[] {
     return Object.keys(this.commands);
   }
 
-  getLanguageById(language: string) {
+  getEnabledLanguageKeys(): string[] {
+    const languages: string[] = [];
+    Object.keys(this.commands).forEach((element) => {
+      if (this.isEnabled(element)) {
+        languages.push(element);
+      }
+    });
+
+    return languages;
+  }
+
+  getLanguageById(language: string): LanguageConfig {
     return this.commands[language] ?? {};
   }
 
-  getLanguageNameById(language: string) {
-    return this.getLanguageKeys().includes(language)
+  getLanguageNameById(language: string): string {
+    return this.getAllLanguageKeys().includes(language)
       ? this.getLanguageById(language).name
       : language.toUpperCase();
+  }
+
+  isEnabled(language: string): boolean {
+    const configEnabled = localStorage.getItem('enabled_' + language);
+
+    if (configEnabled && configEnabled == 'false') {
+      return false;
+    }
+
+    return true;
   }
 }

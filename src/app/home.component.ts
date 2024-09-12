@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit {
   }
 
   getBrawlLanguages() {
-    return this.languageCommandService.getLanguageNames();
+    return this.languageCommandService.getLanguageNames().slice(0, 5);
   }
 
   setLargeTerminal() {
