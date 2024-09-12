@@ -95,7 +95,7 @@ export class LanguageCommandService {
   }
 
   isEnabled(language: string): boolean {
-    let configEnabled = localStorage.getItem('enabled_' + language);
+    const configEnabled = localStorage.getItem('enabled_' + language);
 
     if (configEnabled && configEnabled == 'false') {
       return false;

@@ -62,7 +62,7 @@ export class ConfigComponent {
 
     this.languageCommandService.getAllLanguageKeys().forEach((lang) => {
       let enabled = true;
-      let configEnabled = localStorage.getItem('enabled_' + lang);
+      const configEnabled = localStorage.getItem('enabled_' + lang);
       if (configEnabled && configEnabled == 'false') {
         enabled = false;
       }
