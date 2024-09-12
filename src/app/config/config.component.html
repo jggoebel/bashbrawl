@@ -39,6 +39,16 @@
       </clr-checkbox-wrapper>
     </clr-checkbox-container>
   </form>
+
+  <form [formGroup]="languagesForm">
+    <h3>Languages</h3>
+    <div *ngFor="let lang of languageCommandService.getAllLanguageKeys()">
+      <label>
+        <input type="checkbox" [formControlName]="lang" />
+        {{ lang }}
+      </label>
+    </div>
+  </form>
   <button type="button" class="btn btn-outline" (click)="storeSettings()">
     Save
   </button>
