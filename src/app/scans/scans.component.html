@@ -1,0 +1,18 @@
+<div class="scores" *ngIf="getScans().length > 0">
+  <table>
+    <ng-container *ngFor="let scan of getScans(); let i = index">
+      <tr class="entry-row">
+        <td *ngIf="i >= 3">{{ i }}.</td>
+        <td>
+          <ng-container>
+            <div>
+              <img [src]="getUrl(scan)">
+            </div>
+            <div>{{ getCodeBase64Decoded(scan) }}</div>
+          </ng-container>
+          
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+</div>

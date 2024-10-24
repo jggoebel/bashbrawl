@@ -8,6 +8,7 @@ import { RootComponent } from './root.component';
 import { HomeComponent } from './home.component';
 import { ConfigComponent } from './config/config.component';
 import { LeaderboardComponent } from './leaderboard/leaderboard.component';
+import { ScansComponent } from './scans/scans.component';
 import { EmbeddedLeaderboardComponent } from './leaderboard/embedded/leaderboard-embedded.component';
 import { BashbrawlterminalComponent } from './terminals/bashbrawl/bashbrawlterminal.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -38,6 +39,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     HomeComponent,
     ConfigComponent,
     LeaderboardComponent,
+    ScansComponent,
     EmbeddedLeaderboardComponent,
     BashbrawlterminalComponent,
     AtobPipe,

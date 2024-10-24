@@ -1,0 +1,18 @@
+.brawl-color {
+  color: #74e2cd;
+}
+
+.scores {
+  height: calc(100% + 2.4rem) !important;
+  margin: -1.2rem;
+  background-color: #01162a;
+  color: white;
+  padding: 0px 0px 24px 0;
+  font-family: monospace;
+  display: flex;
+  flex-flow: column;
+}
+
+td {
+  padding-bottom: 20px;
+}

@@ -106,6 +106,16 @@ export class ScoreService {
       .pipe(map(extractResponseContent));
   }
 
+  public getScannedCodes() {
+    if (this.useLocal) {
+      return of([]);
+    }
+
+    return this.garg
+      .get('/scan')
+      .pipe(map(extractResponseContent));
+  }
+
   public validateHealth(): Observable<boolean> {
     const server = this.getServer();
     if (!server || !server.startsWith('http')) {
