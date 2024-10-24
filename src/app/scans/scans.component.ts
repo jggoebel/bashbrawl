@@ -30,12 +30,7 @@ export class ScansComponent implements AfterViewInit {
     return this.scans ?? [];
   }
 
-
   getUrl(code: string) {
-    return (
-      this.scoreService.getServer() +
-      '/score/qrcode/' +
-      code
-    );
+    return this.scoreService.getServer() + '/score/qrcode/' + code;
   }
 }

@@ -111,9 +111,7 @@ export class ScoreService {
       return of([]);
     }
 
-    return this.garg
-      .get('/scan')
-      .pipe(map(extractResponseContent));
+    return this.garg.get('/scan').pipe(map(extractResponseContent));
   }
 
   public validateHealth(): Observable<boolean> {
