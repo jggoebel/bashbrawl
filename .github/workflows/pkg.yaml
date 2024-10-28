@@ -67,11 +67,6 @@ jobs:
           ${{ env.build_and_cache }} 
           build_and_cache arm64
 
-      - name: Fill ARM64 cache
-        run: |
-          ${{ env.build_and_cache }} 
-          build_and_cache arm32
-
       - name: Login container registry
         if: fromJSON(env.should_push_image)
         run: |
@@ -83,10 +78,9 @@ jobs:
         run: |
           safe_ref=$(echo "${{ github.ref_name }}" | sed -e 's/[^a-zA-Z0-9\-\.]/-/g')
           docker buildx build --push \
-          --platform linux/amd64,linux/arm64,linux/arm32 \
+          --platform linux/amd64,linux/arm64 \
           --cache-from type=local,src=/home/runner/tmp/amd64 \
           --cache-from type=local,src=/home/runner/tmp/arm64 \
-          --cache-from type=local,src=/home/runner/tmp/arm32 \
           --tag ${GITHUB_REPOSITORY,,}:$safe_ref \
           --file Dockerfile .
 
@@ -94,9 +88,8 @@ jobs:
         if: fromJSON(env.should_tag_latest)
         run: |
           docker buildx build --push \
-          --platform linux/amd64,linux/arm64,linux/arm32 \
+          --platform linux/amd64,linux/arm64 \
           --cache-from type=local,src=/home/runner/tmp/amd64 \
           --cache-from type=local,src=/home/runner/tmp/arm64 \
-          --cache-from type=local,src=/home/runner/tmp/arm32 \
           --tag ${GITHUB_REPOSITORY,,}:latest \
           --file Dockerfile .
