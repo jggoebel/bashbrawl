@@ -37,9 +37,11 @@
             {{ score.x.maxStreak }}
           </td>
           <td class="score">
-            {{ score.x.avgLength | number: '1.2-2' }}
+            <!-- prettier-ignore -->
+            {{ score.x.avgLength | number:'1.2-2' }}
           </td>
-          <td class="score">{{ score.x.speed | number: '1.2-2' }}/s</td>
+          <!-- prettier-ignore -->
+          <td class="score">{{ score.x.speed | number:'1.2-2' }}/s</td>
         </ng-container>
       </tr>
     </ng-container>
