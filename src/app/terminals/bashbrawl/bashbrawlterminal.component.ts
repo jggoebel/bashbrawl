@@ -425,8 +425,12 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       );
 
     await this.writeDelayed('You scored ' + score.score + '!');
-    this.writeDelayed('Your entered ' + score.x.count + ' unique commands.');
-    this.writeDelayed('Your highest Streak was ' + score.x.maxStreak + '.');
+    await this.writeDelayed(
+      'Your entered ' + score.x.count + ' unique commands.',
+    );
+    await this.writeDelayed(
+      'Your highest Streak was ' + score.x.maxStreak + '.',
+    );
 
     if (
       leaderboardWithLocalPlacement.placement < 10 &&
