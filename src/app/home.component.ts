@@ -1,5 +1,8 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { BashbrawlterminalComponent } from './terminals/bashbrawl/bashbrawlterminal.component';
+import {
+  BashbrawlterminalComponent,
+  Leaderboard,
+} from './terminals/bashbrawl/bashbrawlterminal.component';
 import { LanguageCommandService } from './terminals/bashbrawl/languages/language-command.service';
 import {
   animate,
@@ -70,9 +73,9 @@ export class HomeComponent implements OnInit {
   terminalState = 'hidden';
   shrinkState = 'normal';
 
-  public lastScanned: { code: string; times: number };
   badgeScanningMode = false;
-  scannedCode = false;
+  gameStarted = false;
+  advancedLeaderboard = false;
   scannerTimeoutId: number;
   code = '';
   scannerCode = '';
@@ -126,20 +129,15 @@ export class HomeComponent implements OnInit {
 
   resetToDefault() {
     this.code = '';
-    this.scannedCode = false;
+    this.gameStarted = false;
 
     if (this.terms) {
       this.terms.clearTerminal();
     }
-    if (this.badgeScanningMode) {
-      this.setHiddenTerminal();
-    } else {
-      this.setSmallTerminal();
-    }
+    this.setHiddenTerminal();
   }
 
   onScan(code: string) {
-    console.log('Scanned: ' + code);
     this.code = code;
     this.cooldown = false;
     this.cooldownTime = '';
@@ -157,14 +155,14 @@ export class HomeComponent implements OnInit {
 
   onValidScan(code: string) {
     this.code = code;
-    this.scannedCode = true;
+    this.gameStarted = true;
     setTimeout(() => this.setSmallTerminal(), 100);
   }
 
   onCooldown(cooldownTimeEnd: string) {
     this.cooldown = true;
     this.cooldownTime = cooldownTimeEnd;
-    this.scannedCode = false;
+    this.gameStarted = false;
     this.code = '';
     setTimeout(() => this.resetCooldownTimer(), 5000);
   }
@@ -187,11 +185,19 @@ export class HomeComponent implements OnInit {
   @HostListener('window:keypress', ['$event'])
   protected keyEvent(event: KeyboardEvent): void {
     window.clearTimeout(this.scannerTimeoutId);
-    if (event.key === 'Enter' && this.scannerCode.length >= 2) {
+
+    if (event.code === 'Space') {
+      this.advancedLeaderboard = true;
+    }
+
+    if (event.key === 'Enter' && !this.badgeScanningMode) {
+      this.gameStarted = true;
+      this.setSmallTerminal();
+    } else if (event.key === 'Enter' && this.scannerCode.length >= 2) {
       this.onScan(this.scannerCode);
       this.scannerCode = '';
     } else {
-      if (!this.scannedCode) {
+      if (!this.gameStarted) {
         this.scannerCode += event.key;
         // Reset scannerCode after 20ms to avoid normal keyboard inputs
         this.scannerTimeoutId = window.setTimeout(() => {
@@ -200,6 +206,14 @@ export class HomeComponent implements OnInit {
       }
     }
 
+    event.preventDefault();
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  protected keyUpEvent(event: KeyboardEvent): void {
+    if (event.code === 'Space') {
+      this.advancedLeaderboard = false;
+    }
     event.preventDefault();
   }
 

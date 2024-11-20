@@ -17,6 +17,7 @@ export class AppComponent {
   public themes = themes;
   public imprint = '';
   public privacyPolicy = '';
+  public badgeScanningMode = false;
 
   constructor(private config: AppConfigService) {
     this.config.getLogo(this.logo).then((obj: string) => {
@@ -35,6 +36,10 @@ export class AppComponent {
     if (environment.privacypolicy && environment.privacypolicy != '') {
       this.privacyPolicy = environment.privacypolicy;
     }
+
+    this.badgeScanningMode = localStorage.getItem('badge_scanner')
+      ? true
+      : false;
 
     if (
       localStorage.getItem('disable_imprint') &&

@@ -4,6 +4,12 @@
       <th>Rank</th>
       <th>Name</th>
       <th>Score</th>
+      <ng-container *ngIf="advanced">
+        <th>Commands</th>
+        <th>Streak</th>
+        <th>Avg. Length</th>
+        <th>Strokes</th>
+      </ng-container>
     </tr>
 
     <ng-container *ngFor="let score of getScores(); let i = index">
@@ -23,6 +29,18 @@
         <td class="score">
           {{ score.score }}
         </td>
+        <ng-container *ngIf="advanced">
+          <td class="score">
+            {{ score.x.count }}
+          </td>
+          <td class="score">
+            {{ score.x.maxStreak }}
+          </td>
+          <td class="score">
+            {{ score.x.avgLength | number: '1.2-2' }}
+          </td>
+          <td class="score">{{ score.x.speed | number: '1.2-2' }}/s</td>
+        </ng-container>
       </tr>
     </ng-container>
   </table>

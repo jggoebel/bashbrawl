@@ -28,14 +28,20 @@
             </div>
             <div
               class="text centered cta"
-              *ngIf="!badgeScanningMode || scannedCode"
+              *ngIf="!badgeScanningMode && gameStarted"
             >
               Type <i class="brawl-language brawl-color">brawl play</i> to enter
               the arena.
             </div>
             <div
               class="text centered cta"
-              *ngIf="badgeScanningMode && !scannedCode && !cooldown"
+              *ngIf="!badgeScanningMode && !gameStarted"
+            >
+              Press <i class="brawl-language brawl-color">ENTER</i> to play.
+            </div>
+            <div
+              class="text centered cta"
+              *ngIf="badgeScanningMode && !gameStarted && !cooldown"
             >
               Scan your <i class="brawl-language brawl-color">BADGE</i> to play.
             </div>
@@ -46,14 +52,15 @@
               }}</i>
               for another try!
             </div>
-            <div
-              class="centered leaderboard"
-              *ngIf="badgeScanningMode && !scannedCode"
-            >
+            <div class="centered leaderboard" *ngIf="!gameStarted">
               <app-leaderboard-embdedded
                 [onlyTop]="5"
                 [embedded]="true"
+                [advanced]="advancedLeaderboard"
               ></app-leaderboard-embdedded>
+            </div>
+            <div class="centered leaderboard-space" *ngIf="!gameStarted">
+              Hold <i class="brawl-language brawl-color">SPACE</i> for stats.
             </div>
           </div>
         </div>
@@ -62,7 +69,7 @@
           id="terminal"
           [@terminalAnimation]="terminalState"
           (@terminalAnimation.done)="resize()"
-          *ngIf="scannedCode || !badgeScanningMode"
+          *ngIf="gameStarted"
         >
           <app-bashbrawl-terminal
             (gameEnded)="resetToDefault()"

@@ -50,7 +50,15 @@
     }
 
     .leaderboard {
-      padding-top: 5vh;
+      padding-top: 2vh;
+    }
+
+    .leaderboard-space {
+      width: max-content;
+      font-size: 12px;
+      .brawl-language {
+        font-size: 16px;
+      }
     }
 
     div.centered {

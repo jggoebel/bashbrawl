@@ -25,6 +25,12 @@ export class Score {
   name: string;
   score: number;
   code: string;
+  x: {
+    maxStreak: number;
+    speed: number;
+    count: number;
+    avgLength: number;
+  };
 }
 
 export class Leaderboard {
@@ -78,6 +84,8 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   private interrupted = false;
   private TERMINAL_CHAR_DELAY = 40;
   private TERMINAL_WHITESPACE_DELAY = 2;
+  private FIRE_COMMANDS_BASE = 3; // commands threshold to be entered in FIRE_COMMANDS_TIMERANGE
+  private FIRE_COMMANDS_TIMERANGE = 7; // seconds
 
   // Game related
   private DEFAULT_GAME_TIME = 60;
@@ -85,13 +93,13 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   private gameRunning = false;
   private commandsEntered: string[] = [];
   private commandsEnteredAtTimepoint: number[] = [];
-  private streak = 0;
-  private highestStreak = 0;
-  private gameTime = 0;
-  private score = 0;
-
-  // Leaderboards maps a list of score entries to the language they competed in.
-  private leaderboard: Leaderboard;
+  private gameTime = 0; // How many seconds are left to play
+  private streak = 0; // Current streak
+  private score = 0; // Current score
+  private highestStreak = 0; // Highest Streak achieved
+  private keysPressed = 0; // Total number of keys pressed, used to calculate strokes / second
+  private keysPressedInGame = 0; // Used to save the number at the end of the game to avoid numbers being counted entered in the name field
+  private totalCommandLength = 0; // Used to calculate avg Length of commands entered;
 
   @ViewChild('terminal', { static: true }) terminalDiv: ElementRef;
 
@@ -146,6 +154,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.term.write(` ${this.terminalSymbol} `);
 
     this.term.onData((e) => {
+      this.keysPressed++;
       if (e === Keycodes.CTR_C) {
         //this.resetToDefaultShell();
         //this.interrupted = true;
@@ -278,6 +287,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.score = 0;
     this.streak = 0;
     this.highestStreak = 0;
+    this.keysPressed = 0;
     this.commandsEntered = [];
     this.commandsEnteredAtTimepoint = [];
     this.gameTime = this.DEFAULT_GAME_TIME;
@@ -328,6 +338,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.input_blocked = true;
     this.command = '';
     this.cursorPosition = 0;
+    this.keysPressedInGame = this.keysPressed;
     //this.inputFn = this.handleCommandWithNewline;
     this.commandFn = this.noop;
     await this.saveScore();
@@ -370,11 +381,6 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   async saveScore() {
     this.term.write('\r\n');
     await this.writeDelayed('Time is up!');
-    await this.writeDelayed('You scored ' + this.score + '!');
-    await this.writeDelayed(
-      'Your highest Streak was ' + this.highestStreak + '.',
-    );
-
     await this.writeDelayed('Enter your name:', true);
     this.terminalSymbol = 'Name:';
 
@@ -401,12 +407,26 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const score: Score = { name: fullName, score: this.score, code: this.code };
+    const score: Score = {
+      name: fullName,
+      score: this.score,
+      code: this.code,
+      x: {
+        maxStreak: this.highestStreak,
+        speed: this.keysPressedInGame / this.DEFAULT_GAME_TIME,
+        count: this.commandsEntered.length,
+        avgLength: this.totalCommandLength / this.commandsEntered.length,
+      },
+    };
 
     const leaderboardWithLocalPlacement: LeaderboardWithLocalPlacement =
       await firstValueFrom(
         this.scoreService.setScoreForLanguage(this.gameLanguage, score),
       );
+
+    await this.writeDelayed('You scored ' + score.score + '!');
+    this.writeDelayed('Your entered ' + score.x.count + ' unique commands.');
+    this.writeDelayed('Your highest Streak was ' + score.x.maxStreak + '.');
 
     if (
       leaderboardWithLocalPlacement.placement < 10 &&
@@ -449,9 +469,10 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       language = 'all';
     }
     if (
-      !leaderboardWithLocalPlacement ||
-      leaderboardWithLocalPlacement.language == '' ||
-      leaderboardWithLocalPlacement.scores.length == 0
+      !score.score &&
+      (!leaderboardWithLocalPlacement ||
+        leaderboardWithLocalPlacement.language == '' ||
+        leaderboardWithLocalPlacement.scores.length == 0)
     ) {
       this.term.writeln(`No Leaderboard for this language present.`);
       return;
@@ -543,13 +564,13 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
     let score: {
       base: number;
-      fire: number;
+      fireMultiplier: number;
       streak: number;
       streakPoints: number;
       total: number;
     } = {
       base: 0,
-      fire: 0,
+      fireMultiplier: 1,
       streak: 0,
       streakPoints: 0,
       total: 0,
@@ -580,6 +601,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
       score = this.getCommandScore();
       this.score += score.total;
+      this.totalCommandLength += cmd.length; // cmd is the command entered, we do not need r.cmd as this could also be an alias
 
       outputString = ' ✔ ' + r.cmd;
 
@@ -589,8 +611,8 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
       outputString += ' | + ' + score.total;
 
-      if (score.fire > 0) {
-        outputString += ' 🔥x' + score.fire;
+      if (score.fireMultiplier > 1) {
+        outputString += ' 🔥x' + score.fireMultiplier;
       }
     } else if (r.found && this.commandsEntered.includes(r.cmd)) {
       this.commandsEnteredAtTimepoint = []; // Reset so the streak gets lost
@@ -619,36 +641,36 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   getCommandScore() {
     const result: {
       base: number;
-      fire: number;
+      fireMultiplier: number;
       streak: number;
       streakPoints: number;
       total: number;
     } = {
       base: 128,
-      fire: 0,
+      fireMultiplier: 1,
       streak: 0,
       streakPoints: 0,
       total: 0,
     };
 
     const timeSinceStart = this.DEFAULT_GAME_TIME - this.gameTime;
-    const commandsInLastSeconds =
-      this.commandsInLastSeconds(
-        this.commandsEnteredAtTimepoint,
-        timeSinceStart,
-        7,
-      ) - 3;
+    const commandsInLastSeconds = this.commandsInLastSeconds(
+      this.commandsEnteredAtTimepoint,
+      timeSinceStart,
+      this.FIRE_COMMANDS_TIMERANGE,
+    );
 
     const growthFactor = 2;
-    let fireMultiplier = 1;
-    if (commandsInLastSeconds >= 0) {
-      fireMultiplier = Math.pow(growthFactor, commandsInLastSeconds + 1);
-      result.fire = fireMultiplier;
+    if (commandsInLastSeconds >= this.FIRE_COMMANDS_BASE) {
+      result.fireMultiplier = Math.pow(
+        growthFactor,
+        commandsInLastSeconds - this.FIRE_COMMANDS_BASE + 1,
+      );
     }
 
     result.streak = this.streak;
     result.streakPoints = result.base * (this.streak - 1);
-    result.total = (result.base + result.streakPoints) * fireMultiplier;
+    result.total = (result.base + result.streakPoints) * result.fireMultiplier;
 
     return result;
   }

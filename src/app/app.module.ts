@@ -21,10 +21,10 @@ import { APIClientFactory } from './services/api.service';
 import { LanguageCommandService } from './terminals/bashbrawl/languages/language-command.service';
 import { ScoreService } from './services/score.service';
 import '@cds/core/icon/register.js';
-import { ClarityIcons, terminalIcon } from '@cds/core/icon';
+import { ClarityIcons, terminalIcon, starIcon, playIcon } from '@cds/core/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-ClarityIcons.addIcons(terminalIcon);
+ClarityIcons.addIcons(terminalIcon, starIcon, playIcon);
 
 const appInitializerFn = (appConfig: AppConfigService) => {
   return () => {
