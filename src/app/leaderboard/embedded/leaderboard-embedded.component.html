@@ -13,7 +13,11 @@
     </tr>
 
     <ng-container *ngFor="let score of getScores(); let i = index">
-      <tr class="entry-row" *ngIf="i < onlyTop">
+      <tr
+        [class.entry-row]="true"
+        *ngIf="i < onlyTop"
+        [class.self]="i === getScoreIndex()"
+      >
         <td *ngIf="i >= 3">{{ i + 1 }}.</td>
         <td *ngIf="i === 0">🥇</td>
         <td *ngIf="i === 1">🥈</td>
@@ -44,6 +48,53 @@
           <td class="score">{{ score.x.speed | number:'1.2-2' }}/s</td>
         </ng-container>
       </tr>
+    </ng-container>
+
+    <ng-container *ngIf="hasLocalScores()">
+      <tr class="entry-row divider">
+        <td>...</td>
+        <td>...</td>
+        <td class="score">...</td>
+        <ng-container *ngIf="advanced">
+          <td class="score">...</td>
+          <td class="score">...</td>
+          <td class="score">...</td>
+          <td class="score">...</td>
+        </ng-container>
+      </tr>
+
+      <ng-container *ngFor="let score of getLocalScores(); let i = index">
+        <tr [class.entry-row]="true" [class.self]="i === getLocalScoreIndex()">
+          <td>
+            {{
+              leaderboardWithLocalPlacement.placement +
+                i -
+                getLocalScoreIndex() +
+                1
+            }}.
+          </td>
+          <td>
+            {{ score.name }}
+          </td>
+          <td class="score">
+            {{ score.score }}
+          </td>
+          <ng-container *ngIf="advanced">
+            <td class="score">
+              {{ score.x.count }}
+            </td>
+            <td class="score">
+              {{ score.x.maxStreak }}
+            </td>
+            <td class="score">
+              <!-- prettier-ignore -->
+              {{ score.x.avgLength | number:'1.2-2' }}
+            </td>
+            <!-- prettier-ignore -->
+            <td class="score">{{ score.x.speed | number:'1.2-2' }}/s</td>
+          </ng-container>
+        </tr>
+      </ng-container>
     </ng-container>
   </table>
 </div>

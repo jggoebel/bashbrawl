@@ -1,7 +1,9 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import {
   BashbrawlterminalComponent,
-  Leaderboard,
+  GameFinished,
+  LeaderboardWithLocalPlacement,
+  Score,
 } from './terminals/bashbrawl/bashbrawlterminal.component';
 import { LanguageCommandService } from './terminals/bashbrawl/languages/language-command.service';
 import {
@@ -31,6 +33,7 @@ export class Cooldown {
           width: '10vw',
           minWidth: '0',
           height: '10vh',
+          opacity: 0,
         }),
       ),
       state(
@@ -65,6 +68,13 @@ export class Cooldown {
           maxHeight: '0vh',
         }),
       ),
+      state(
+        'hidden',
+        style({
+          opacity: 0,
+          maxHeight: '0vh',
+        }),
+      ),
       transition('normal <=> shrunk', animate('1000ms ease-in-out')),
     ]),
   ],
@@ -72,6 +82,7 @@ export class Cooldown {
 export class HomeComponent implements OnInit {
   terminalState = 'hidden';
   shrinkState = 'normal';
+  leaderboardState = 'normal';
 
   badgeScanningMode = false;
   gameStarted = false;
@@ -82,8 +93,15 @@ export class HomeComponent implements OnInit {
   cooldown = false;
   cooldownTime = '';
 
+  winningScreen: boolean;
+  leaderboardWithLocalPlacement: LeaderboardWithLocalPlacement;
+  score: Score;
+
   @ViewChild('terminal', { static: false })
   private terms: BashbrawlterminalComponent;
+
+  @ViewChild('instructions')
+  private instructions: HTMLElement;
 
   constructor(
     private languageCommandService: LanguageCommandService,
@@ -113,6 +131,7 @@ export class HomeComponent implements OnInit {
 
   setLargeTerminal() {
     this.shrinkState = 'shrunk';
+    this.leaderboardState = 'hidden';
     this.terminalState = 'large';
     this.terms.resize();
   }
@@ -120,21 +139,41 @@ export class HomeComponent implements OnInit {
   setSmallTerminal() {
     this.shrinkState = 'normal';
     this.terminalState = 'small';
+    this.leaderboardState = 'hidden';
   }
 
   setHiddenTerminal() {
     this.shrinkState = 'normal';
     this.terminalState = 'hidden';
+    this.leaderboardState = 'normal';
   }
 
   resetToDefault() {
     this.code = '';
     this.gameStarted = false;
+    this.winningScreen = false;
 
     if (this.terms) {
       this.terms.clearTerminal();
     }
     this.setHiddenTerminal();
+  }
+
+  gameEnded(gameFinished: GameFinished) {
+    this.unfocusTerminal();
+
+    if (gameFinished && gameFinished.success) {
+      this.gameStarted = false;
+      this.winningScreen = true;
+      this.leaderboardState = 'normal';
+      this.shrinkState = 'shrunk';
+      this.terminalState = 'hidden';
+      this.leaderboardWithLocalPlacement =
+        gameFinished.leaderboardWithLocalPlacement;
+      this.score = gameFinished.score;
+    } else {
+      this.resetToDefault();
+    }
   }
 
   onScan(code: string) {
@@ -179,15 +218,28 @@ export class HomeComponent implements OnInit {
   }
 
   focusTerminal() {
-    setTimeout(() => this.terms.focusTerminal(), 0);
+    if (this.terminalState != 'hidden') {
+      setTimeout(() => this.terms?.focusTerminal(), 0);
+    }
+  }
+
+  unfocusTerminal() {
+    this.terms?.blurTerminal();
   }
 
   @HostListener('window:keypress', ['$event'])
   protected keyEvent(event: KeyboardEvent): void {
+    console.log(event.key);
     window.clearTimeout(this.scannerTimeoutId);
 
     if (event.code === 'Space') {
       this.advancedLeaderboard = true;
+      return;
+    }
+
+    if (event.key === 'Enter' && this.winningScreen) {
+      this.resetToDefault();
+      return;
     }
 
     if (event.key === 'Enter' && !this.badgeScanningMode) {

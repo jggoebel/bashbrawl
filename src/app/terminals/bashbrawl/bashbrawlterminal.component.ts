@@ -20,6 +20,7 @@ import { sleep } from '@cds/core/internal';
 import { LanguageCommandService } from './languages/language-command.service';
 import { ScoreService } from '../../services/score.service';
 import { firstValueFrom } from 'rxjs';
+import { scissorsIconName } from '@cds/core/icon';
 
 export class Score {
   name: string;
@@ -45,6 +46,12 @@ export class LeaderboardWithLocalPlacement {
   localscores: Score[];
 }
 
+export class GameFinished {
+  success: boolean;
+  leaderboardWithLocalPlacement: LeaderboardWithLocalPlacement;
+  score: Score;
+}
+
 // eslint-disable-next-line no-control-regex
 const stripAnsi = (str: string) => str.replace(/\x1b\[[0-9;]*m/g, '');
 
@@ -59,7 +66,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
   code = '';
 
   @Output()
-  gameEnded = new EventEmitter();
+  gameEnded = new EventEmitter<GameFinished>();
 
   @Output()
   gameStarted = new EventEmitter();
@@ -309,7 +316,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
     if (this.interrupted) {
       this.term.write('\r\n');
-      this.gameEnded.emit();
+      this.gameEnded.emit({ success: false } as GameFinished);
       return;
     }
 
@@ -317,7 +324,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     this.input_blocked = false;
 
     if (this.interrupted) {
-      this.gameEnded.emit();
+      this.gameEnded.emit({ success: false } as GameFinished);
       return;
     }
 
@@ -424,14 +431,6 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
         this.scoreService.setScoreForLanguage(this.gameLanguage, score),
       );
 
-    await this.writeDelayed('You scored ' + score.score + '!');
-    await this.writeDelayed(
-      'Your entered ' + score.x.count + ' unique commands.',
-    );
-    await this.writeDelayed(
-      'Your highest Streak was ' + score.x.maxStreak + '.',
-    );
-
     if (
       leaderboardWithLocalPlacement.placement < 10 &&
       leaderboardWithLocalPlacement.placement > 0
@@ -442,10 +441,17 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     }
 
     // Add ANSI Escape Codes to format the name for the leaderboard so the current run shows in bold letters
-    score.name = '>>\x1b[1;31m ' + score.name + ' \x1b[0m<<'; // \x1b[1;31m makes the text bold (1) and red (31), \x1b[0m clears all effects
+    //score.name = '>>\x1b[1;31m ' + score.name + ' \x1b[0m<<'; // \x1b[1;31m makes the text bold (1) and red (31), \x1b[0m clears all effects
 
-    await this.writeDelayed(`Thank you for playing, ${fullName}!`);
-    await this.writeDelayed(`Let's view the Leaderboard.`);
+    this.resetToDefaultShell();
+    this.input_blocked = true;
+    this.gameEnded.emit({
+      success: true,
+      leaderboardWithLocalPlacement: leaderboardWithLocalPlacement,
+      score: score,
+    } as GameFinished);
+
+    return;
 
     await this.displayLeaderboard(
       this.gameLanguage,
@@ -523,8 +529,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
       scores.push(['...', '...', '...']);
       const scoreIndex = leaderboardWithLocalPlacement.localscores.findIndex(
         (localScore) =>
-          score.name === localScore.name &&
-          localScore.score === localScore.score,
+          score.name === localScore.name && score.score === localScore.score,
       );
 
       scores = scores.concat(
@@ -986,5 +991,9 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
   public focusTerminal() {
     this.term.focus();
+  }
+
+  public blurTerminal() {
+    this.term.blur();
   }
 }
