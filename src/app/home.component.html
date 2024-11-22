@@ -8,12 +8,12 @@
     class="hide-split-gutter"
   >
     <as-split-area [size]="100" class="split-area-1">
-      <div class="brawl-instructions">
+      <div class="brawl-instructions" #instructions>
         <div class="brawl-instructions-guide" style="max-height: 70vh">
           <img src="/assets/bashbrawl/bashbrawl_text.png" />
           <div class="brawl-instructions-text" [@shrinkAnimation]="shrinkState">
             <div class="text centered">
-              Test your command line skills<br />
+              Test your command line skills.<br />
               You have 60 seconds to enter commands from
             </div>
             <div class="text centered">
@@ -52,15 +52,23 @@
               }}</i>
               for another try!
             </div>
-            <div class="centered leaderboard" *ngIf="!gameStarted">
-              <app-leaderboard-embdedded
-                [onlyTop]="5"
-                [embedded]="true"
-                [advanced]="advancedLeaderboard"
-              ></app-leaderboard-embdedded>
-            </div>
-            <div class="centered leaderboard-space" *ngIf="!gameStarted">
+          </div>
+          <div [@shrinkAnimation]="leaderboardState">
+            <app-leaderboard-embdedded
+              [onlyTop]="5"
+              [embedded]="true"
+              [advanced]="advancedLeaderboard"
+              [score]="score"
+              [leaderboardWithLocalPlacementInput]="
+                leaderboardWithLocalPlacement
+              "
+              [showLocalScores]="winningScreen"
+            ></app-leaderboard-embdedded>
+            <div class="centered leaderboard-space">
               Hold <i class="brawl-language brawl-color">SPACE</i> for stats.
+            </div>
+            <div class="text centered cta" *ngIf="winningScreen">
+              Press <i class="brawl-language brawl-color">ENTER</i> to continue.
             </div>
           </div>
         </div>
@@ -72,10 +80,9 @@
           *ngIf="gameStarted"
         >
           <app-bashbrawl-terminal
-            (gameEnded)="resetToDefault()"
+            (gameEnded)="gameEnded($event)"
             (gameStarted)="setLargeTerminal()"
             (focusout)="focusTerminal()"
-            [code]="code"
             #terminal
           >
           </app-bashbrawl-terminal>

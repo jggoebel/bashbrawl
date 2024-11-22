@@ -3,7 +3,7 @@
  */
 import { LanguageConfig } from './language-config.interface';
 export const phpConfig: LanguageConfig = {
-  name: 'php',
+  name: 'PHP 8',
   cmds: [
     // keywords
     ['and'],

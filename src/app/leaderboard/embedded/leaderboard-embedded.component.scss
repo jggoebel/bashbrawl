@@ -5,6 +5,7 @@
 .leaderboard {
   color: white;
   font-family: monospace;
+  padding-top: 20px;
 
   .score {
     text-align: right;
@@ -27,13 +28,22 @@
   }
 
   .entry-row {
-    font-size: 24px;
+    font-size: 2.5vh;
+    line-height: 2vh;
+    &.divider {
+      line-height: 1.5vh;
+    }
     td {
       padding: 10px;
       a {
         color: #74e2cd;
         font-weight: bold;
       }
+    }
+    &.self {
+      background-color: #74e2cd;
+      font-weight: bold;
+      color: #01162a;
     }
   }
 }
