@@ -731,7 +731,4 @@ export const cssConfig: LanguageConfig = {
     ['Yellow'],
     ['YellowGreen'],
   ],
-}
-
-
-
+};
