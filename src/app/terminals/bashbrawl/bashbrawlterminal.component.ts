@@ -20,7 +20,6 @@ import { sleep } from '@cds/core/internal';
 import { LanguageCommandService } from './languages/language-command.service';
 import { ScoreService } from '../../services/score.service';
 import { firstValueFrom } from 'rxjs';
-import { scissorsIconName } from '@cds/core/icon';
 
 export class Score {
   name: string;
