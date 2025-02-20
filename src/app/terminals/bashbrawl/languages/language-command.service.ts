@@ -34,6 +34,7 @@ export class LanguageCommandService {
       found: false,
     };
     cmd = cmd.trim(); // Trim the command once outside the loop
+    cmd = cmd.toLowerCase();
 
     if (language && language != 'all') {
       // Only one language specified
