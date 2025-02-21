@@ -9,6 +9,7 @@ import { javascriptConfig } from './javascript';
 import { phpConfig } from './php';
 import { cssConfig } from './css';
 import { mysqlConfig } from './mysql';
+import { csharpConfig } from './csharp';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,7 @@ export class LanguageCommandService {
     php: phpConfig,
     css: cssConfig,
     mysql: mysqlConfig,
+    csharp: csharpConfig,
     // other languages can be added here
   };
 

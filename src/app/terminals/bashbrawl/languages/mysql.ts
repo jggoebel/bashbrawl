@@ -1,4 +1,4 @@
-/** Taken from https://github.com/CommandLineHeroes/clh-bash/tree/master/assets/cmds **/
+/** Taken from https://dev.mysql.com/doc/refman/8.4/en/keywords.html **/
 
 import { LanguageConfig } from './language-config.interface';
 export const mysqlConfig: LanguageConfig = {
