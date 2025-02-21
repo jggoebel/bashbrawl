@@ -613,8 +613,15 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
 
       outputString = ' ✔ ' + r.cmd;
 
-      if (this.gameLanguage == 'all') {
+      if (this.gameLanguage == 'all' && r.lang.length < 5) {
         outputString += ' | (' + r.lang.join(', ') + ')';
+      } else if (this.gameLanguage == 'all' && r.lang.length >= 5) {
+        outputString +=
+          ' | (' +
+          r.lang[Math.floor(Math.random() * r.lang.length)] +
+          ' & ' +
+          (r.lang.length - 1) +
+          ' other languages)';
       }
 
       outputString += ' | + ' + score.total;
@@ -625,7 +632,7 @@ export class BashbrawlterminalComponent implements OnInit, AfterViewInit {
     } else if (r.found && this.commandsEntered.includes(r.cmd)) {
       this.commandsEnteredAtTimepoint = []; // Reset so the streak gets lost
       this.streak = 0;
-      outputString = ' ✘ ' + cmd + '  | Duplicate to "' + r.cmd + '"';
+      outputString = ' ✘ ' + cmd + ' | You already entered "' + r.cmd + '"';
     } else {
       this.commandsEnteredAtTimepoint = []; // Reset so the streak gets lost
       this.streak = 0;
